@@ -1,12 +1,11 @@
-HOWTO install hamapps.sh
 ## HOWTO Install hamapps.sh on a Raspberry Pi  
 
-Version: 20190524
+Version: 20190524  
 Author: Steve Magnuson, AG7GN
 
 ### Prerequisites
 
-- Raspberry Pi 3B or 3B+ running Raspbian Stretch (does not work on Compas image)
+- Raspberry Pi 3B or 3B+ running Raspbian Stretch (__does not work on Compass image__)
 - Familiarity with Terminal and basic LINUX commands, including sudo
 
 ### Download and Install
