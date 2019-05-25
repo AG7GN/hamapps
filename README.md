@@ -12,8 +12,8 @@ Author: Steve Magnuson, AG7GN
 
 - Open a terminal and run:
 
-		git clone https://github.com/AG7GN/hamapps-installer  
-		cd hamapps-installer 
+		git clone https://github.com/AG7GN/hamapps  
+		cd hamapps 
 		chmod +x hamapps.sh
 		sudo cp hamapps.sh /usr/local/bin  
 
