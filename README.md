@@ -27,6 +27,6 @@ Author: Steve Magnuson, AG7GN
 - Read the instructions.  Installation or upgrade of ham radio applications will take a few minutes or
 an hour or so depending on how many and what apps you install/upgrade.  
 
-- From now on, just run hamapps.sh in a terminal window to upgrade or 
+- From now on, just run `hamapps.sh` in a terminal window to upgrade or 
 install ham radio applications.
 
