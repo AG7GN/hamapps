@@ -16,14 +16,13 @@
 #
 #=========================================================================================
 
-VERSION="1.34"
+VERSION="1.35"
 
 GITHUB_URL="https://github.com"
 HAMLIB_LATEST_URL="$GITHUB_URL/Hamlib/Hamlib/releases/latest"
 FLROOT_URL="http://www.w1hkj.com/files/"
 WSJTX_KEY_URL="https://keyserver.ubuntu.com/pks/lookup?op=get&search=0xB5E1FEF627613D4957BA72885794D54C862549F9"
 WSJTX_URL="http://www.physics.princeton.edu/pulsar/k1jt/wsjtx.html"
-WSJTX_REPO="deb http://ppa.launchpad.net/ki7mt/wsjtx/ubuntu trusty main"
 DIREWOLF_GIT_URL="$GITHUB_URL/wb2osz/direwolf"
 DIREWOLF_LATEST="$DIREWOLF_GIT_URL/archive/dev.zip"
 #DIREWOLF_LATEST="$DIREWOLF_GIT_URL/releases/latest"
@@ -36,6 +35,7 @@ GARIM_URL="https://www.whitemesa.net/garim/garim.html"
 PIARDOP_URL="http://www.cantab.net/users/john.wiseman/Downloads/Beta/piardop2"
 PAT_GIT_URL="$GITHUB_URL/la5nta/pat/releases"
 CHIRP_URL="https://trac.chirp.danplanet.com/chirp_daily/LATEST"
+HAMAPPS_GIT_URL="$GITHUB_URL/AG7GN/hamapps"
 
 export CXXFLAGS='-O2 -march=armv8-a -mtune=cortex-a53'
 export CFLAGS='-O2 -march=armv8-a -mtune=cortex-a53'
@@ -46,9 +46,7 @@ function Usage () {
    echo "Version $VERSION"
    echo
    echo "This script installs common ham radio applications on a Raspberry Pi"
-   echo "It has been tested on Raspbian Stretch, but will probably work on other"
-   echo "Raspbian versions.  Use caution when running this script on non-Raspbian"
-   echo "Raspberry Pis."
+   echo "It has been tested on Raspbian 10 (Buster) only."
    echo 
    echo "This script does not configure any of the applications it installs."
    echo
@@ -59,20 +57,14 @@ function Usage () {
    echo "Where:"
    echo "   <apps> is one or more apps, separated by comma, from this list:"
    echo "   fldigi,flmsg,flamp,flrig,flwrap,xastir,direwolf,wsjtx,arim,piardop,"
-   echo "   pat,chirp,rigctl"
+   echo "   pat,chirp,rigctl,hamapps"
    echo
    echo "   Note that if you use \"upgrade\" and the app is not already installed,"
-   echo "   this script will install it.  For xastir and direwolf, if you use"
-   echo "   \"install\" and the app is already installed, this script will upgrade"
-   echo "   the application.  Using \"upgrade\" will not overwrite any existing"
-   echo "   direwolf.conf file in your home directory."
+   echo "   this script will install it."
    echo
    echo "   For fldigi and related apps, either \"install\" or \"upgrade\" will"
    echo "   retrieve the latest version and install it if the latest version is"
    echo "   not already installed."
-   echo
-   echo "   For wsjtx, the latest version will be installed from KI7MT's"
-   echo "   repository."
    echo
    echo "   arim is a messaging, file transfer and keyboard-to-keyboard chat"
    echo "   program. It is designed to use the ARDOP (Amateur Radio Digital"
@@ -167,6 +159,8 @@ function aptError () {
 #      return 0
 #   fi
 #}
+
+grep -qi buster /etc/*-release || { echo >&2 "This script only works on Raspbian 10 (Buster)."; Usage; }
 
 case ${1,,} in
    install|upgrade|update)
@@ -476,6 +470,13 @@ EOF
 			rm -f $PAT_FILE
          echo "============= pat installed ============="
          ;;
+      hamapps*)
+      	cd $HOME
+      	rm -rf hamapps
+      	git clone $HAMAPPS_GIT_URL || { echo >&2 "======= git clone $HAMAPPS_GIT_URL failed ========"; exit 1; }
+      	sudo cp hamapps/*.sh /usr/local/bin/
+      	rm -rf hamapps
+      	;;
       chirp*)
          cd $HOME
          echo "============= chirp installation requested ============"

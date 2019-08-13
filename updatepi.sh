@@ -1,9 +1,9 @@
 #!/bin/bash
 
-# Hybrid GUI/shell script to update Raspberry Pi OS and related applications, as well as certain 
+# YAD/shell script to update Raspberry Pi OS and related applications, as well as certain 
 # ham applications.
 
-VERSION="1.5"
+VERSION="1.6"
 
 if ! which hamapps.sh 1>/dev/null 2>&1
 then
@@ -15,7 +15,7 @@ fi
 APPS=""
 TFILE="$(mktemp)"
 echo -e "FALSE\nRaspbian OS and Apps\nCheck for Updates" > "$TFILE"
-for A in fldigi flmsg flamp flrig flwrap direwolf pat arim piardop2 chirp wsjtx xastir
+for A in fldigi flmsg flamp flrig flwrap direwolf pat arim piardop2 chirp wsjtx xastir hamapps.sh
 do 
    if which $A 1>/dev/null 2>&1 
 	then
