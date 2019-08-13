@@ -21,7 +21,17 @@ do
 	then
 	   echo -e "FALSE\n$A\nCheck for Updates" >> "$TFILE"
 	else
-		echo -e "FALSE\n$A\nNew Install" >> "$TFILE"
+		if [[ $A == "chirp" ]]
+		then
+			if which chirpw 1>/dev/null 2>&1
+			then
+				echo -e "FALSE\n$A\nCheck for Updates" >> "$TFILE" 
+			else
+				echo -e "FALSE\n$A\nNew Install" >> "$TFILE"
+			fi
+		else
+			echo -e "FALSE\n$A\nNew Install" >> "$TFILE"
+		fi
 	fi
 done
 
@@ -32,7 +42,7 @@ do
 done
 
 OSUPDATES=NO
-ANS="$(yad --title="Update Apps/OS - version $VERSION" --list --height=600 --width=400 --text-align=center \
+ANS="$(yad --title="Update Apps/OS - version $VERSION" --list --height=625 --width=400 --text-align=center \
 	--text "<b>This script will install and/or check for and install updates for the apps you select below.\n \
 If there are updates available, it will install them.</b>\n\n \
 This Pi must be connected to the Internet\nfor this script to work.\n" \
