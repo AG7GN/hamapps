@@ -497,7 +497,7 @@ EOF
          	echo "============= Downloading $CHIRP_URL ============="
          	wget -q -O $CHIRP_TAR_FILE $CHIRP_URL || { echo >&2 "======= $CHIRP_URL download failed with $? ========"; exit 1; }
          	[ -s "$CHIRP_TAR_FILE" ] || { echo >&2 "======= $CHIRP_TAR_FILE is empty ========"; exit 1; }
-         	sudo apt-get install -y python-gtk2 python-serial python-libxml2 || aptError "sudo apt-get install -y python-gtk2 python-serial python-libxml2"
+         	sudo apt-get install -y python-gtk2 python-serial python-libxml2 python-future || aptError "sudo apt-get install -y python-gtk2 python-serial python-libxml2 python-future"
          	tar xzf $CHIRP_TAR_FILE
          	CHIRP_DIR="$(echo $CHIRP_TAR_FILE | sed 's/.tar.gz//')"
          	cd $CHIRP_DIR
