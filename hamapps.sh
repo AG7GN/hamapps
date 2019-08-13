@@ -471,11 +471,13 @@ EOF
          echo "============= pat installed ============="
          ;;
       hamapps*)
+      	echo "============= hamapps install/update requested ============="
       	cd $HOME
-      	rm -rf hamapps
+      	[ -d "$HOME/hamapps" ] && rm -rf hamapps
       	git clone $HAMAPPS_GIT_URL || { echo >&2 "======= git clone $HAMAPPS_GIT_URL failed ========"; exit 1; }
       	sudo cp hamapps/*.sh /usr/local/bin/
       	rm -rf hamapps
+      	echo "============= hamapps installed ============="
       	;;
       chirp*)
          cd $HOME
