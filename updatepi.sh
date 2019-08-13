@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# YAD/shell script to update Raspberry Pi OS and related applications, as well as certain 
-# ham applications.
+# YAD/shell script to install or update certain ham applications, as well as 
+# update Raspbian OS and apps.
 
 VERSION="1.6"
 
