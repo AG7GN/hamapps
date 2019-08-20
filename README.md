@@ -1,6 +1,6 @@
 ## Scripts to install/update various ham radio applications as well as regular Raspbian Buster updates  
 
-Version: 20190813  
+Version: 20190819  
 Author: Steve Magnuson, AG7GN
 
 ### Prerequisites
@@ -13,6 +13,7 @@ Author: Steve Magnuson, AG7GN
 - Open a terminal and run:
 
 		cd ~
+		rm -rf hamapps 
 		git clone https://github.com/AG7GN/hamapps  
 		sudo cp hamapps/*.sh /usr/local/bin
 		rm -rf hamapps 
@@ -30,7 +31,7 @@ Hamapps.sh is called from updatepi.sh (see "Run from Raspberry Menu" below) when
 
 - Open a Terminal and run:
 
-		hamapps.sh  
+		updatepi.sh  
 
 - Read the instructions.  Installation or upgrade of ham radio applications will take a few minutes or
 an hour or so depending on how many and what apps you install/upgrade.  

@@ -16,7 +16,7 @@
 #
 #=========================================================================================
 
-VERSION="1.35"
+VERSION="1.36"
 
 GITHUB_URL="https://github.com"
 HAMLIB_LATEST_URL="$GITHUB_URL/Hamlib/Hamlib/releases/latest"
@@ -36,6 +36,7 @@ PIARDOP_URL="http://www.cantab.net/users/john.wiseman/Downloads/Beta/piardop2"
 PAT_GIT_URL="$GITHUB_URL/la5nta/pat/releases"
 CHIRP_URL="https://trac.chirp.danplanet.com/chirp_daily/LATEST"
 HAMAPPS_GIT_URL="$GITHUB_URL/AG7GN/hamapps"
+IPTABLES_GIT_URL="$GITHUB_URL/AG7GN/hamapps"
 
 export CXXFLAGS='-O2 -march=armv8-a -mtune=cortex-a53'
 export CFLAGS='-O2 -march=armv8-a -mtune=cortex-a53'
@@ -471,13 +472,40 @@ EOF
          echo "============= pat installed ============="
          ;;
       hamapps*)
-      	echo "============= hamapps install/update requested ============="
+      	echo "============= hamapps.sh+updatepi.sh install/update requested ========"
       	cd $HOME
       	[ -d "$HOME/hamapps" ] && rm -rf hamapps
       	git clone $HAMAPPS_GIT_URL || { echo >&2 "======= git clone $HAMAPPS_GIT_URL failed ========"; exit 1; }
-      	sudo cp hamapps/*.sh /usr/local/bin/
+			INSTALLED_VER="$(grep -i "^VERSION" $(which hamapps.sh))"
+			LATEST_VER="$(grep -i "^VERSION" hamapps/hamapps.sh)"
+			if [[ $INSTALLED_VER == $LATEST_VER ]]
+			then
+				echo "============= hamapps.sh+updatepi.sh are up to date ============="
+			else
+      		sudo cp hamapps/*.sh /usr/local/bin/
+	      	echo "============= hamapps.sh+updatepi.sh  installed =============="
+			fi
       	rm -rf hamapps
-      	echo "============= hamapps installed ============="
+      	;;
+      hampi-iptables)
+      	echo "============= hampi-iptables install/update requested ============="
+      	cd $HOME
+      	[ -d "$HOME/hampi-iptables" ] && rm -rf hampi-iptables
+      	git clone $IPTABLES_GIT_URL || { echo >&2 "======= git clone $IPTABLES_GIT_URL failed ========"; exit 1; }
+     		INSTALLED_VER="$(head -n1 /etc/iptables/rules.v4)"
+     		LATEST_VER="$(head -n1 hampi-iptables/rules.v4)"
+      	if [ -s /etc/iptables/rules.v4 ] && [[ $INSTALLED_VER == $LATEST_VER ]]
+      	then
+     			echo "============= hampi-iptables is up to date ============="
+			else      			
+      		sudo cp /etc/iptables/rules.v4 /etc/iptables/rules.v4.previous
+      		sudo cp /etc/iptables/rules.v6 /etc/iptables/rules.v6.previous
+      		sudo cp -f hampi-iptables/rules.v? /etc/iptables/
+      		sudo iptables-restore < /etc/iptables/rules.v4
+      		sudo ip6tables-restore < /etc/iptables/rules.v6
+      		echo "============= hampi-iptables installed ================="
+      	fi
+     		rm -rf hampi-iptables
       	;;
       chirp*)
          cd $HOME

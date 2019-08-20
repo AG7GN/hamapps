@@ -3,7 +3,7 @@
 # YAD/shell script to install or update certain ham applications, as well as 
 # update Raspbian OS and apps.
 
-VERSION="1.6"
+VERSION="1.36"
 
 if ! which hamapps.sh 1>/dev/null 2>&1
 then
@@ -15,24 +15,29 @@ fi
 APPS=""
 TFILE="$(mktemp)"
 echo -e "FALSE\nRaspbian OS and Apps\nCheck for Updates" > "$TFILE"
-for A in fldigi flmsg flamp flrig flwrap direwolf pat arim piardop2 chirp wsjtx xastir hamapps.sh
+for A in fldigi flmsg flamp flrig flwrap direwolf pat arim piardop2 chirp wsjtx xastir hamapps.sh hampi-iptables
 do 
-   if which $A 1>/dev/null 2>&1 
-	then
-	   echo -e "FALSE\n$A\nCheck for Updates" >> "$TFILE"
-	else
-		if [[ $A == "chirp" ]]
-		then
+	case $A in
+		hampi-iptables)
+			echo -e "FALSE\n$A\nCheck for Updates" >> "$TFILE" 
+			;
+		chirp)
 			if which chirpw 1>/dev/null 2>&1
 			then
 				echo -e "FALSE\n$A\nCheck for Updates" >> "$TFILE" 
 			else
 				echo -e "FALSE\n$A\nNew Install" >> "$TFILE"
 			fi
-		else
-			echo -e "FALSE\n$A\nNew Install" >> "$TFILE"
-		fi
-	fi
+			;
+		*)
+		   if which $A 1>/dev/null 2>&1 
+			then
+	   		echo -e "FALSE\n$A\nCheck for Updates" >> "$TFILE"
+			else
+				echo -e "FALSE\n$A\nNew Install" >> "$TFILE"
+			fi
+			;;
+	esac
 done
 
 COLUMN=""
