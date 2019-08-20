@@ -16,7 +16,7 @@
 #
 #=========================================================================================
 
-VERSION="1.42"
+VERSION="1.43"
 
 GITHUB_URL="https://github.com"
 HAMLIB_LATEST_URL="$GITHUB_URL/Hamlib/Hamlib/releases/latest"
@@ -38,6 +38,7 @@ CHIRP_URL="https://trac.chirp.danplanet.com/chirp_daily/LATEST"
 HAMAPPS_GIT_URL="$GITHUB_URL/AG7GN/hamapps"
 IPTABLES_GIT_URL="$GITHUB_URL/AG7GN/hampi-iptables"
 AUTOHOTSPOT_GIT_URL="$GITHUB_URL/AG7GN/autohotspot"
+KENWOOD_GIT_URL="$GITHUB_URL/AG7GN/kenwood"
 
 export CXXFLAGS='-O2 -march=armv8-a -mtune=cortex-a53'
 export CFLAGS='-O2 -march=armv8-a -mtune=cortex-a53'
