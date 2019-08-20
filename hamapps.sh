@@ -16,7 +16,7 @@
 #
 #=========================================================================================
 
-VERSION="1.38"
+VERSION="1.39"
 
 GITHUB_URL="https://github.com"
 HAMLIB_LATEST_URL="$GITHUB_URL/Hamlib/Hamlib/releases/latest"
@@ -483,9 +483,9 @@ EOF
 				echo "============= hamapps.sh+updatepi.sh are up to date ============="
 			else
       		sudo cp hamapps/*.sh /usr/local/bin/
-	      	echo "============= hamapps.sh+updatepi.sh  installed =============="
+	      	echo "============= hamapps.sh+updatepi.sh installed =============="
 			fi
-      	rm -rf hamapps
+      	rm -rf hamapps/
       	;;
       hampi-iptables)
       	echo "============= hampi-iptables install/update requested ============="
@@ -505,7 +505,7 @@ EOF
       		sudo ip6tables-restore < /etc/iptables/rules.v6
       		echo "============= hampi-iptables installed ================="
       	fi
-     		rm -rf hampi-iptables
+     		rm -rf hampi-iptables/
       	;;
       chirp*)
          cd $HOME
