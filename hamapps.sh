@@ -16,7 +16,7 @@
 #
 #=========================================================================================
 
-VERSION="1.40"
+VERSION="1.41"
 
 GITHUB_URL="https://github.com"
 HAMLIB_LATEST_URL="$GITHUB_URL/Hamlib/Hamlib/releases/latest"
@@ -499,7 +499,7 @@ EOF
 			then
 				echo "============= autohotspot is up to date ============="
 			else
-      		autohotspot/install-autohotspot.sh
+      		autohotspot/install-autohotspot-script.sh
 	      	echo "============= autohotspot installed =============="
 			fi
       	rm -rf autohotspot/
