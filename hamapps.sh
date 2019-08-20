@@ -16,7 +16,7 @@
 #
 #=========================================================================================
 
-VERSION="1.39"
+VERSION="1.40"
 
 GITHUB_URL="https://github.com"
 HAMLIB_LATEST_URL="$GITHUB_URL/Hamlib/Hamlib/releases/latest"
@@ -37,6 +37,7 @@ PAT_GIT_URL="$GITHUB_URL/la5nta/pat/releases"
 CHIRP_URL="https://trac.chirp.danplanet.com/chirp_daily/LATEST"
 HAMAPPS_GIT_URL="$GITHUB_URL/AG7GN/hamapps"
 IPTABLES_GIT_URL="$GITHUB_URL/AG7GN/hampi-iptables"
+AUTOHOTSPOT_GIT_URL="$GITHUB_URL/AG7GN/autohotspot"
 
 export CXXFLAGS='-O2 -march=armv8-a -mtune=cortex-a53'
 export CFLAGS='-O2 -march=armv8-a -mtune=cortex-a53'
@@ -474,7 +475,7 @@ EOF
       hamapps*)
       	echo "============= hamapps.sh+updatepi.sh install/update requested ========"
       	cd $HOME
-      	[ -d "$HOME/hamapps" ] && rm -rf hamapps
+      	[ -d "$HOME/hamapps" ] && rm -rf hamapps/
       	git clone $HAMAPPS_GIT_URL || { echo >&2 "======= git clone $HAMAPPS_GIT_URL failed ========"; exit 1; }
 			INSTALLED_VER="$(grep -i "^VERSION" $(which hamapps.sh))"
 			LATEST_VER="$(grep -i "^VERSION" hamapps/hamapps.sh)"
@@ -487,10 +488,26 @@ EOF
 			fi
       	rm -rf hamapps/
       	;;
+      autohotspot)
+      	echo "============= autohotspot install/update requested ========"
+      	cd $HOME
+      	[ -d "$HOME/autohotspot" ] && rm -rf autohotspot/
+      	git clone $AUTOHOTSPOT_GIT_URL || { echo >&2 "======= git clone $AUTOHOTSPOT_GIT_URL failed ========"; exit 1; }
+			INSTALLED_VER="$(grep -i "^VERSION" $HOME/configure-autohotspot.sh)"
+			LATEST_VER="$(grep -i "^VERSION" autohotspot/configure-autohotspot.sh)"
+			if [[ $INSTALLED_VER == $LATEST_VER ]]
+			then
+				echo "============= autohotspot is up to date ============="
+			else
+      		autohotspot/install-autohotspot.sh
+	      	echo "============= autohotspot installed =============="
+			fi
+      	rm -rf autohotspot/
+      	;;
       hampi-iptables)
       	echo "============= hampi-iptables install/update requested ============="
       	cd $HOME
-      	[ -d "$HOME/hampi-iptables" ] && rm -rf hampi-iptables
+      	[ -d "$HOME/hampi-iptables" ] && rm -rf hampi-iptables/
       	git clone $IPTABLES_GIT_URL || { echo >&2 "======= git clone $IPTABLES_GIT_URL failed ========"; exit 1; }
      		INSTALLED_VER="$(head -n1 /etc/iptables/rules.v4)"
      		LATEST_VER="$(head -n1 hampi-iptables/rules.v4)"
