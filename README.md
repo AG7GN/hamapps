@@ -1,6 +1,6 @@
 ## Scripts to install/update various ham radio applications as well as regular Raspbian Buster updates  
 
-Version: 20190819  
+Version: 20190820  
 Author: Steve Magnuson, AG7GN
 
 ### Prerequisites

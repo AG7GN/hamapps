@@ -16,7 +16,7 @@
 #
 #=========================================================================================
 
-VERSION="1.41"
+VERSION="1.42"
 
 GITHUB_URL="https://github.com"
 HAMLIB_LATEST_URL="$GITHUB_URL/Hamlib/Hamlib/releases/latest"
@@ -59,7 +59,7 @@ function Usage () {
    echo "Where:"
    echo "   <apps> is one or more apps, separated by comma, from this list:"
    echo "   fldigi,flmsg,flamp,flrig,flwrap,xastir,direwolf,wsjtx,arim,piardop,"
-   echo "   pat,chirp,rigctl,hamapps"
+   echo "   pat,chirp,rigctl,hamapps,hampi-iptables,autohotspot,710.sh"
    echo
    echo "   Note that if you use \"upgrade\" and the app is not already installed,"
    echo "   this script will install it."
@@ -503,6 +503,22 @@ EOF
 	      	echo "============= autohotspot installed =============="
 			fi
       	rm -rf autohotspot/
+      	;;
+      710*)
+      	echo "============= 710.sh install/update requested ========"
+      	cd $HOME
+      	[ -d "$HOME/kenwood" ] && rm -rf kenwood/
+      	git clone $KENWOOD_GIT_URL || { echo >&2 "======= git clone $KENWOOD_GIT_URL failed ========"; exit 1; }
+			INSTALLED_VER="$(grep -i "^VERSION" /usr/local/bin/710.sh)"
+			LATEST_VER="$(grep -i "^VERSION" kenwood/710.sh)"
+			if [[ $INSTALLED_VER == $LATEST_VER ]]
+			then
+				echo "============= 710.sh is up to date ============="
+			else
+      		sudo cp kenwood/710.sh /usr/local/bin/
+	      	echo "============= 710.sh installed =============="
+			fi
+      	rm -rf kenwood/
       	;;
       hampi-iptables)
       	echo "============= hampi-iptables install/update requested ============="
