@@ -3,7 +3,7 @@
 # YAD/shell script to install or update certain ham applications, as well as 
 # update Raspbian OS and apps.
 
-VERSION="1.36"
+VERSION="1.37"
 
 if ! which hamapps.sh 1>/dev/null 2>&1
 then
@@ -20,7 +20,7 @@ do
 	case $A in
 		hampi-iptables)
 			echo -e "FALSE\n$A\nCheck for Updates" >> "$TFILE" 
-			;
+			;;
 		chirp)
 			if which chirpw 1>/dev/null 2>&1
 			then
@@ -28,7 +28,7 @@ do
 			else
 				echo -e "FALSE\n$A\nNew Install" >> "$TFILE"
 			fi
-			;
+			;;
 		*)
 		   if which $A 1>/dev/null 2>&1 
 			then
