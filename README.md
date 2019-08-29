@@ -1,12 +1,16 @@
 ## Scripts to install/update various ham radio applications as well as regular Raspbian Buster updates  
 
-Version: 20190820  
+Version: 20190829  
 Author: Steve Magnuson, AG7GN
 
 ### Prerequisites
 
 - Raspberry Pi 3B or 3B+ running Raspbian Buster ONLY (__does not work on Raspbian Stretch or Compass__)
 - Familiarity with Terminal and basic LINUX commands, including sudo
+
+### Release Notes for version 1.44
+
+- Added `sudo --fix-broken install` command to hamapps.sh to fix a problem with fortran packages that accompany the wsjtx installation.
 
 ### Download and Install
 

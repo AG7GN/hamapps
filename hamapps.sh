@@ -16,7 +16,7 @@
 #
 #=========================================================================================
 
-VERSION="1.43"
+VERSION="1.44"
 
 GITHUB_URL="https://github.com"
 HAMLIB_LATEST_URL="$GITHUB_URL/Hamlib/Hamlib/releases/latest"
@@ -176,7 +176,7 @@ esac
 [[ $2 == "" ]] && Usage
 
 which wget >/dev/null || { echo >&2 "This script requires wget."; Usage; }
-sudo apt-get update || aptError "sudo apt-get update"
+sudo apt-get update
 if [[ $? != 0 ]]
 then
    echo
@@ -187,6 +187,7 @@ then
    echo >&2 "This is likely problem with a repository somewhere on the Internet.  Run this script again to retry."
    exit 1
 fi
+sudo apt-get --fix-broken -y install || aptError "sudo apt-get --fix-broken -y install"
 sudo apt-get install -y extra-xdg-menus bc || aptError "sudo apt-get install -y extra-xdg-menus bc"
 
 APPS="$(echo "${2,,}" | tr ',' '\n' | sort -u | xargs)" 
