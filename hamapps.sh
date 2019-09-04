@@ -16,7 +16,7 @@
 #
 #=========================================================================================
 
-VERSION="1.44"
+VERSION="1.45"
 
 GITHUB_URL="https://github.com"
 HAMLIB_LATEST_URL="$GITHUB_URL/Hamlib/Hamlib/releases/latest"
@@ -495,7 +495,7 @@ EOF
       	cd $HOME
       	[ -d "$HOME/autohotspot" ] && rm -rf autohotspot/
       	git clone $AUTOHOTSPOT_GIT_URL || { echo >&2 "======= git clone $AUTOHOTSPOT_GIT_URL failed ========"; exit 1; }
-			INSTALLED_VER="$(grep -i "^VERSION" $HOME/configure-autohotspot.sh)"
+			INSTALLED_VER="$(grep -i "^VERSION" /usr/local/bin/configure-autohotspot.sh)"
 			LATEST_VER="$(grep -i "^VERSION" autohotspot/configure-autohotspot.sh)"
 			if [[ $INSTALLED_VER == $LATEST_VER ]]
 			then
