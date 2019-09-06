@@ -16,7 +16,7 @@
 #
 #=========================================================================================
 
-VERSION="1.46"
+VERSION="1.47"
 
 GITHUB_URL="https://github.com"
 HAMLIB_LATEST_URL="$GITHUB_URL/Hamlib/Hamlib/releases/latest"
@@ -39,7 +39,7 @@ HAMAPPS_GIT_URL="$GITHUB_URL/AG7GN/hamapps"
 IPTABLES_GIT_URL="$GITHUB_URL/AG7GN/hampi-iptables"
 AUTOHOTSPOT_GIT_URL="$GITHUB_URL/AG7GN/autohotspot"
 KENWOOD_GIT_URL="$GITHUB_URL/AG7GN/kenwood"
-HAMPI-BACKUP-RESTORE_GIT_URL="$GITHUB_URL/AG7GN/hampi-backup-restore"
+HAMPI_BU_RS_GIT_URL="$GITHUB_URL/AG7GN/hampi-backup-restore"
 
 export CXXFLAGS='-O2 -march=armv8-a -mtune=cortex-a53'
 export CFLAGS='-O2 -march=armv8-a -mtune=cortex-a53'
@@ -511,7 +511,7 @@ EOF
       	echo "============= hampi-backup-restore install/update requested ========"
       	cd $HOME
       	[ -d "$HOME/hampi-backup-restore" ] && rm -rf hampi-backup-restore/
-      	git clone $HAMPI-BACKUP-RESTORE_GIT_URL || { echo >&2 "======= git clone $HAMPI-BACKUP-RESTORE_GIT_URL failed ========"; exit 1; }
+      	git clone $HAMPI_BU_RS_GIT_URL || { echo >&2 "======= git clone $HAMPI_BU_RS_GIT_URL failed ========"; exit 1; }
 			INSTALLED_VER="$(grep -i "^VERSION" /usr/local/bin/hampi-backup-restore.sh)"
 			LATEST_VER="$(grep -i "^VERSION" hampi-backup-restore/hampi-backup-restore.sh)"
 			if [[ $INSTALLED_VER == $LATEST_VER ]]
