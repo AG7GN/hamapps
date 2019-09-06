@@ -8,10 +8,11 @@ Author: Steve Magnuson, AG7GN
 - Raspberry Pi 3B or 3B+ running Raspbian Buster ONLY (__does not work on Raspbian Stretch or Compass__)
 - Familiarity with Terminal and basic LINUX commands, including sudo
 
-### Release Notes for version 1.45
+### Release Notes
 
 - Added `sudo --fix-broken install` command to hamapps.sh to fix a problem with fortran packages that accompany the wsjtx installation.
 - Moved autohotspot script install location to /usr/local/bin
+- Added hampi-backup-restore.sh
 
 ## Download and Install
 

@@ -3,7 +3,7 @@
 # YAD/shell script to install or update certain ham applications, as well as 
 # update Raspbian OS and apps.
 
-VERSION="1.45"
+VERSION="1.46"
 
 if ! which hamapps.sh 1>/dev/null 2>&1
 then
@@ -15,7 +15,7 @@ fi
 APPS=""
 TFILE="$(mktemp)"
 echo -e "FALSE\nRaspbian OS and Apps\nCheck for Updates" > "$TFILE"
-for A in fldigi flmsg flamp flrig flwrap direwolf pat arim piardop2 chirp wsjtx xastir hamapps.sh hampi-iptables autohotspot 710.sh
+for A in fldigi flmsg flamp flrig flwrap direwolf pat arim piardop2 chirp wsjtx xastir hamapps.sh hampi-backup-restore.sh hampi-iptables autohotspot 710.sh
 do 
 	case $A in
 		hampi-iptables|autohotspot)
