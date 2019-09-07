@@ -16,7 +16,7 @@
 #
 #=========================================================================================
 
-VERSION="1.51"
+VERSION="1.51.1"
 
 GITHUB_URL="https://github.com"
 HAMLIB_LATEST_URL="$GITHUB_URL/Hamlib/Hamlib/releases/latest"
@@ -500,8 +500,11 @@ EOF
 			then
 				echo "============= hamapps.sh+updatepi.sh are up to date ============="
 			else
-      		sudo cp hamapps/*.sh /usr/local/bin/
-      		sudo cp hamapps/updatepi.desktop /usr/local/share/applications/
+			   echo "Copying updatepi.desktop to /usr/local/share/applications/"
+      		sudo cp -f hamapps/updatepi.desktop /usr/local/share/applications/
+      		sudo cp -f hamapps/*.sh /usr/local/bin/
+      		echo "Removing $HOME/.local/share/applications/updatepi.desktop"
+      		sleep 10
       		[ -f $HOME/.local/share/applications/updatepi.desktop ] && rm -f $HOME/.local/share/applications/updatepi.desktop
 	      	echo "============= hamapps.sh+updatepi.sh installed =============="
 			fi
