@@ -16,7 +16,7 @@
 #
 #=========================================================================================
 
-VERSION="1.52"
+VERSION="1.53"
 
 GITHUB_URL="https://github.com"
 HAMLIB_LATEST_URL="$GITHUB_URL/Hamlib/Hamlib/releases/latest"
@@ -218,7 +218,8 @@ do
 				then
                [ -f /usr/local/share/applications/flarq.desktop ] && sudo mv -f /usr/local/share/applications/flarq.desktop /usr/local/share/applications/flarq.desktop.disabled
                sudo mv -f $HOME/.local/share/applications/flarq*.desktop /usr/local/share/applications/
-				fi		  
+				fi
+				sudo mv -f $HOME/trim*.sh /usr/local/bin/		  
             if [[ $VERSION != $INSTALLED ]]
             then
                tar xzf "$FILE"
