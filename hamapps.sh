@@ -16,7 +16,7 @@
 #
 #=========================================================================================
 
-VERSION="1.47"
+VERSION="1.51"
 
 GITHUB_URL="https://github.com"
 HAMLIB_LATEST_URL="$GITHUB_URL/Hamlib/Hamlib/releases/latest"
@@ -26,9 +26,7 @@ WSJTX_URL="http://www.physics.princeton.edu/pulsar/k1jt/wsjtx.html"
 DIREWOLF_GIT_URL="$GITHUB_URL/wb2osz/direwolf"
 DIREWOLF_LATEST="$DIREWOLF_GIT_URL/archive/dev.zip"
 #DIREWOLF_LATEST="$DIREWOLF_GIT_URL/releases/latest"
-DIREWOLF_DESKTOP="$HOME/.local/share/applications/direwolf.desktop"
 XASTIR_GIT_URL="$GITHUB_URL/Xastir/Xastir.git"
-XASTIR_DESKTOP="$HOME/.local/share/applications/xastir.desktop"
 ARIM_URL="https://www.whitemesa.net/arim/arim.html"
 GARIM_URL="https://www.whitemesa.net/garim/garim.html"
 #PIARDOP_URL="http://www.cantab.net/users/john.wiseman/Downloads/Beta/piardopc"
@@ -210,6 +208,17 @@ do
             FNAME="$(echo $FILE | sed 's/.tar.gz//')"
             VERSION="$(echo $FNAME | cut -d'-' -f2)"
             INSTALLED="$($APP --version 2>/dev/null | grep -i "$APP\|^Version" | cut -d' ' -f2)"
+            if ls $HOME/.local/share/applications/${APP}*.desktop 1> /dev/null 2>&1
+				then
+               [ -f /usr/local/share/applications/${APP}.desktop ] && sudo mv -f /usr/local/share/applications/${APP}.desktop /usr/local/share/applications/${APP}.desktop.disabled
+               sed -i 's|\/home\/pi\/trim|\/usr\/local\/bin\/trim|' $HOME/.local/share/applications/${APP}*.desktop
+               sudo mv -f $HOME/.local/share/applications/${APP}*.desktop /usr/local/share/applications/
+				fi		  
+				if ls $HOME/.local/share/applications/flarq*.desktop 1> /dev/null 2>&1
+				then
+               [ -f /usr/local/share/applications/flarq.desktop ] && sudo mv -f /usr/local/share/applications/flarq.desktop /usr/local/share/applications/flarq.desktop.disabled
+               sudo mv -f $HOME/.local/share/applications/flarq*.desktop /usr/local/share/applications/
+				fi		  
             if [[ $VERSION != $INSTALLED ]]
             then
                tar xzf "$FILE"
@@ -246,15 +255,9 @@ do
                              grep -q "\-\-debug-level 0" ${FLDIGI_DESKTOPS}/flrig.desktop 2>/dev/null || sudo sed -i 's/Exec=flrig/Exec=flrig --debug-level 0/' $F
                           fi
 							  done
-                    done   
-						  if ls $HOME/.local/share/applications/${APP}*.desktop 1> /dev/null 2>&1
-						  then
-                       [ -s /usr/local/share/applications/${APP}.desktop ] && sudo mv -f /usr/local/share/applications/${APP}.desktop /usr/local/share/applications/${APP}.desktop.disabled
-					     fi		  
-						  if ls $HOME/.local/share/applications/flarq*.desktop 1> /dev/null 2>&1
-						  then
-                       [ -s /usr/local/share/applications/flarq.desktop ] && sudo mv -f /usr/local/share/applications/flarq.desktop /usr/local/share/applications/flarq.desktop.disabled
-					     fi		  
+                    done  
+                    [ -f /usr/local/share/applications/${APP}.desktop ] && sudo mv -f /usr/local/share/applications/${APP}.desktop /usr/local/share/applications/${APP}.desktop.disabled
+                    [ -f /usr/local/share/applications/flarq.desktop ] && sudo mv -f /usr/local/share/applications/flarq.desktop /usr/local/share/applications/flarq.desktop.disabled
                     lxpanelctl restart
                     echo "========= $FNAME installation done ==========="
                  else
@@ -277,15 +280,30 @@ do
       xastir)
          cd $HOME
          echo "=========== Installing $APP ==========="
+<< ////
          sudo apt-get install -y xastir || aptError "sudo apt-get install -y xastir"
 			sudo ln -s /usr/lib/libax25.so.1.0.0 /usr/lib/libax25.so.0
-<< ////
+			[ -f /usr/share/applications/xastir.desktop ] && sudo mv -f /usr/share/applications/xastir.desktop /usr/share/applications/xastir.desktop.disable
+			cat > $HOME/.local/share/applications/xastir.desktop << EOF
+[Desktop Entry]
+Name=Xastir
+Encoding=UTF-8
+GenericName=Xastir
+Comment=APRS
+Exec=sudo xastir
+Icon=/usr/share/pixmaps/xastir/icon.png
+Terminal=false
+Type=Application
+Categories=HamRadio;
+EOF
+         sudo mv -f $HOME/.local/share/applications/xastir.desktop /usr/local/share/applications/
+////
          sudo apt-get install -y build-essential || aptError "sudo apt-get install -y build-essential"
          sudo apt-get install -y git autoconf automake xorg-dev graphicsmagick gv libmotif-dev libcurl4-openssl-dev || aptError "sudo apt-get install -y git autoconf automake xorg-dev graphicsmagick gv libmotif-dev libcurl4-openssl-dev"
-         sudo apt-get install -y gpsman gpsmanshp libpcre3-dev libproj-dev libdb5.3-dev python-dev libax25-dev libwebp-dev || aptError "sudo apt-get install -y gpsman gpsmanshp libpcre3-dev libproj-dev libdb5.3-dev python-dev libax25-dev libwebp-dev"
+         sudo apt-get install -y gpsman gpsmanshp libpcre3-dev libproj-dev libdb5.3-dev python-dev libax25-dev libwebp-dev || aptError "sudo apt-get install -y gpsman gpsmanshp libpcre3-dev libproj-dev libdb5.3-dev python-dev libwebp-dev"
          sudo apt-get install -y shapelib libshp-dev festival festival-dev libgeotiff-dev libgraphicsmagick1-dev || aptError "sudo apt-get install -y shapelib libshp-dev festival festival-dev libgeotiff-dev libgraphicsmagick1-dev"
          sudo apt-get install -y xfonts-100dpi xfonts-75dpi || aptError "sudo apt-get install -y xfonts-100dpi xfonts-75dpi"
-			#xset +fp /usr/share/fonts/X11/100dpi,/usr/share/fonts/X11/75dpi
+			xset +fp /usr/share/fonts/X11/100dpi,/usr/share/fonts/X11/75dpi
          cd $HOME
          if [ -d $HOME/src/Xastir ] 
          then
@@ -304,9 +322,7 @@ do
          if make && sudo make install
          then
             sudo chmod u+s /usr/local/bin/xastir
-            if ! [ -s "$XASTIR_DESKTOP" ]
-            then
-               cat > $HOME/xastir.desktop << EOF
+            cat > $HOME/.local/share/applications/xastir.desktop << EOF
 [Desktop Entry]
 Name=Xastir
 Encoding=UTF-8
@@ -318,18 +334,14 @@ Terminal=false
 Type=Application
 Categories=HamRadio;
 EOF
-               #sudo mkdir -p /usr/local/share/applications
-               #sudo mv $HOME/xastir.desktop $XASTIR_DESKTOP
-               mv $HOME/xastir.desktop $XASTIR_DESKTOP
-               lxpanelctl restart
-            fi
+            sudo mv -f $HOME/.local/share/applications/xastir.desktop /usr/local/share/applications/
+            lxpanelctl restart
             echo "========= $APP installation complete ==========="
          else
             echo "========= $APP installation FAILED ==========="
             cd $HOME
             exit 1
          fi
-////
          cd $HOME
          echo "========= $APP installation complete ==========="
          ;;
@@ -351,6 +363,13 @@ EOF
 			LATEST_VER="$(cat version.h | grep -m1 -i version | sed 's/[^0-9.]//g')"
 			INSTALLED_VER="$(direwolf --version 2>/dev/null | grep -m1 -i "version" | sed 's/(.*)//g;s/[^0-9.]//g')"
 			[[ $INSTALLED_VER == "" ]] && INSTALLED_VER=0
+		   if ls $HOME/.local/share/applications/direwolf*.desktop 1> /dev/null 2>&1
+         then
+            [ -f /usr/local/share/applications/direwolf.desktop ] && sudo mv -f /usr/local/share/applications/direwolf.desktop /usr/local/share/applications/direwolf.desktop.disabled
+            [ -f $HOME/direwolf.conf ] && mv $HOME/direwolf.conf $HOME/direwolf.conf.original
+            sed -i 's|\/home\/pi\/d|\/usr\/local\/bin\/d|' $HOME/.local/share/applications/direwolf*.desktop
+				sudo mv -f $HOME/.local/share/applications/direwolf*.desktop /usr/local/share/applications/
+         fi
 			if (( $(echo "$INSTALLED_VER >= $LATEST_VER" | bc -l) ))
 			then
 				echo "========= Direwolf is already at latest version $LATEST_VER ==========="
@@ -375,12 +394,7 @@ EOF
                make install-rpi
                cd $HOME
                unlink $HOME/Desktop/direwolf.desktop
-               #if ! [ -s "$DIREWOLF_DESKTOP" ]
-				   if ls $HOME/.local/share/applications/direwolf*.desktop 1> /dev/null 2>&1
-               then
-                  [ -s /usr/local/share/applications/direwolf.desktop ] && sudo mv -f /usr/local/share/applications/direwolf.desktop /usr/local/share/applications/direwolf.desktop.disabled
-						[ -s $HOME/direwolf.conf ] && mv $HOME/direwolf.conf $HOME/direwolf.conf.original
-               fi
+               [ -f /usr/local/share/applications/direwolf.desktop ] && sudo mv -f /usr/local/share/applications/direwolf.desktop /usr/local/share/applications/direwolf.desktop.disabled
                echo "========= $APP installation complete ==========="
             else
                echo >&2 "========= $APP installation FAILED ==========="
@@ -487,6 +501,8 @@ EOF
 				echo "============= hamapps.sh+updatepi.sh are up to date ============="
 			else
       		sudo cp hamapps/*.sh /usr/local/bin/
+      		sudo cp hamapps/updatepi.desktop /usr/local/share/applications/
+      		[ -f $HOME/.local/share/applications/updatepi.desktop ] && rm -f $HOME/.local/share/applications/updatepi.desktop
 	      	echo "============= hamapps.sh+updatepi.sh installed =============="
 			fi
       	rm -rf hamapps/
@@ -502,7 +518,9 @@ EOF
 			then
 				echo "============= autohotspot is up to date ============="
 			else
-      		autohotspot/install-autohotspot-script.sh
+      		sudo cp autohotspot/*.sh /usr/local/bin/
+      		sudo cp autohotspot/autohotspot.desktop /usr/local/share/applications/
+      		[ -f $HOME/.local/share/applications/autohotspot.desktop ] && rm -f $HOME/.local/share/applications/autohotspot.desktop
 	      	echo "============= autohotspot installed =============="
 			fi
       	rm -rf autohotspot/
@@ -519,7 +537,8 @@ EOF
 				echo "============= hampi-backup-restore is up to date ============="
 			else
       		sudo cp hampi-backup-restore/hampi-backup-restore.sh /usr/local/bin/
-      		cp hampi-backup-restore/hampi-backup-restore.desktop .local/share/applications/
+      		sudo cp hampi-backup-restore/hampi-backup-restore.desktop /usr/local/share/applications/
+      		[ -f $HOME/.local/share/applications/hampi-backup-restore.desktop ] && rm -f $HOME/.local/share/applications/hampi-backup-restore.desktop
 	      	echo "============= hampi-backup-restore installed =============="
 			fi
       	rm -rf hampi-backup-restore/

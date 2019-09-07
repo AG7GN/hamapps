@@ -3,7 +3,7 @@
 # YAD/shell script to install or update certain ham applications, as well as 
 # update Raspbian OS and apps.
 
-VERSION="1.47"
+VERSION="1.51"
 
 if ! which hamapps.sh 1>/dev/null 2>&1
 then
@@ -47,7 +47,7 @@ do
 done
 
 OSUPDATES=NO
-ANS="$(yad --title="Update Apps/OS - version $VERSION" --list --height=625 --width=400 --text-align=center \
+ANS="$(yad --center --title="Update Apps/OS - version $VERSION" --list --height=625 --width=400 --text-align=center \
 	--text "<b>This script will install and/or check for and install updates for the apps you select below.\n \
 If there are updates available, it will install them.</b>\n\n \
 This Pi must be connected to the Internet\nfor this script to work.\n" \
@@ -93,7 +93,8 @@ fi
 
 if [ -a /var/run/reboot-required ]
 then 
-   yad --title="Update Apps/OS - version $VERSION" --question --borders=30 --no-wrap \
+   yad --center --title="Update Apps/OS - version $VERSION" --question \
+       --borders=30 --no-wrap \
 	    --text="<b>Raspbian updates were installed and a reboot is required.</b>" \
 	    --button="Reboot Now":0 --button=Close:1
    if [ "$?" -eq "1" ]
@@ -104,8 +105,8 @@ then
       echo "" && echo "Reboot" && echo"" && sudo shutdown -r +0
    fi
 fi 
-yad --title="Update Apps/OS - version $VERSION" --info --borders=30 --no-wrap \
-	 --text="<b>Finished.  No reboot required.</b>" --button=Close:0
+yad --center --title="Update Apps/OS - version $VERSION" --info --borders=30 \
+    --no-wrap --text="<b>Finished.  No reboot required.</b>" --button=Close:0
 exit 0
 
 
