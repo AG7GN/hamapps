@@ -502,9 +502,9 @@ EOF
 			else
       		sudo cp -f hamapps/updatepi.desktop /usr/local/share/applications/
       		sudo cp -f hamapps/*.sh /usr/local/bin/
-      		[ -f $HOME/.local/share/applications/updatepi.desktop ] && rm -f $HOME/.local/share/applications/updatepi.desktop
 	      	echo "============= hamapps.sh+updatepi.sh installed =============="
 			fi
+     		[ -f $HOME/.local/share/applications/updatepi.desktop ] && rm -f $HOME/.local/share/applications/updatepi.desktop
       	rm -rf hamapps/
       	;;
       autohotspot)
