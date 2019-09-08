@@ -16,7 +16,7 @@
 #
 #=========================================================================================
 
-VERSION="1.54"
+VERSION="1.55"
 
 GITHUB_URL="https://github.com"
 HAMLIB_LATEST_URL="$GITHUB_URL/Hamlib/Hamlib/releases/latest"
@@ -196,6 +196,16 @@ do
    case $APP in
       fldigi|flamp|flmsg|flrig|flwrap)
          cd $HOME
+         if ls $HOME/.local/share/applications/${APP}*.desktop 1> /dev/null 2>&1
+			then
+            sed -i 's|\/home\/pi\/trim|\/usr\/local\/bin\/trim|' $HOME/.local/share/applications/${APP}*.desktop
+            sudo mv -f $HOME/.local/share/applications/${APP}*.desktop /usr/local/share/applications/
+            sudo mv -f $HOME/trim*.sh /usr/local/bin/		  
+			fi		  
+			if ls $HOME/.local/share/applications/flarq*.desktop 1> /dev/null 2>&1
+			then
+            sudo mv -f $HOME/.local/share/applications/flarq*.desktop /usr/local/share/applications/
+			fi
          FILE=""
          rm -f $APP.list
          echo "========= Downloading ${FLROOT_URL}$APP =========="
@@ -208,18 +218,6 @@ do
             FNAME="$(echo $FILE | sed 's/.tar.gz//')"
             VERSION="$(echo $FNAME | cut -d'-' -f2)"
             INSTALLED="$($APP --version 2>/dev/null | grep -i "$APP\|^Version" | cut -d' ' -f2)"
-            if ls $HOME/.local/share/applications/${APP}*.desktop 1> /dev/null 2>&1
-				then
-               [ -f /usr/local/share/applications/${APP}.desktop ] && sudo mv -f /usr/local/share/applications/${APP}.desktop /usr/local/share/applications/${APP}.desktop.disabled
-               sed -i 's|\/home\/pi\/trim|\/usr\/local\/bin\/trim|' $HOME/.local/share/applications/${APP}*.desktop
-               sudo mv -f $HOME/.local/share/applications/${APP}*.desktop /usr/local/share/applications/
-				fi		  
-				if ls $HOME/.local/share/applications/flarq*.desktop 1> /dev/null 2>&1
-				then
-               [ -f /usr/local/share/applications/flarq.desktop ] && sudo mv -f /usr/local/share/applications/flarq.desktop /usr/local/share/applications/flarq.desktop.disabled
-               sudo mv -f $HOME/.local/share/applications/flarq*.desktop /usr/local/share/applications/
-				fi
-				sudo mv -f $HOME/trim*.sh /usr/local/bin/		  
             if [[ $VERSION != $INSTALLED ]]
             then
                tar xzf "$FILE"
@@ -336,7 +334,7 @@ Type=Application
 Categories=HamRadio;
 EOF
             sudo mv -f $HOME/.local/share/applications/xastir.desktop /usr/local/share/applications/
-				sed -i 's|\/usr\/share|\/usr\/local\/share|' $HOME/.xastir/config/xastir.cnf
+				sed -i 's|\/usr\/share|\/usr\/local\/share|' $HOME/.xastir/config/xastir.cnf 2>/dev/null
             lxpanelctl restart
             echo "========= $APP installation complete ==========="
          else
