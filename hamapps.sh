@@ -16,7 +16,7 @@
 #
 #=========================================================================================
 
-VERSION="1.53"
+VERSION="1.54"
 
 GITHUB_URL="https://github.com"
 HAMLIB_LATEST_URL="$GITHUB_URL/Hamlib/Hamlib/releases/latest"
@@ -281,27 +281,27 @@ do
       xastir)
          cd $HOME
          echo "=========== Installing $APP ==========="
-<< ////
-         sudo apt-get install -y xastir || aptError "sudo apt-get install -y xastir"
-			sudo ln -s /usr/lib/libax25.so.1.0.0 /usr/lib/libax25.so.0
-			[ -f /usr/share/applications/xastir.desktop ] && sudo mv -f /usr/share/applications/xastir.desktop /usr/share/applications/xastir.desktop.disable
-			cat > $HOME/.local/share/applications/xastir.desktop << EOF
-[Desktop Entry]
-Name=Xastir
-Encoding=UTF-8
-GenericName=Xastir
-Comment=APRS
-Exec=sudo xastir
-Icon=/usr/share/pixmaps/xastir/icon.png
-Terminal=false
-Type=Application
-Categories=HamRadio;
-EOF
-         sudo mv -f $HOME/.local/share/applications/xastir.desktop /usr/local/share/applications/
-////
+			if apt list --installed 2>/dev/null | grep -q xastir
+			then
+				echo "Removing existing binary that was installed from apt package"
+				if [ -d /usr/share/xastir/maps ]
+				then
+					mkdir -p $HOME/maps
+					cp -r /usr/share/xastir/maps/* $HOME/maps
+				fi
+				sudo apt-get remove -y xastir
+				sudo apt-get -y autoremove
+				if [ -d $HOME/maps ]
+				then
+					sudo cp -r $HOME/maps/* /usr/local/share/xastir/maps
+					rm -rf $HOME/maps
+				fi
+				echo "Done."
+			fi
+			echo "Building $APP from source"
          sudo apt-get install -y build-essential || aptError "sudo apt-get install -y build-essential"
          sudo apt-get install -y git autoconf automake xorg-dev graphicsmagick gv libmotif-dev libcurl4-openssl-dev || aptError "sudo apt-get install -y git autoconf automake xorg-dev graphicsmagick gv libmotif-dev libcurl4-openssl-dev"
-         sudo apt-get install -y gpsman gpsmanshp libpcre3-dev libproj-dev libdb5.3-dev python-dev libax25-dev libwebp-dev || aptError "sudo apt-get install -y gpsman gpsmanshp libpcre3-dev libproj-dev libdb5.3-dev python-dev libwebp-dev"
+         sudo apt-get install -y gpsman gpsmanshp libpcre3-dev libproj-dev libdb5.3-dev python-dev libwebp-dev || aptError "sudo apt-get install -y gpsman gpsmanshp libpcre3-dev libproj-dev libdb5.3-dev python-dev libwebp-dev"
          sudo apt-get install -y shapelib libshp-dev festival festival-dev libgeotiff-dev libgraphicsmagick1-dev || aptError "sudo apt-get install -y shapelib libshp-dev festival festival-dev libgeotiff-dev libgraphicsmagick1-dev"
          sudo apt-get install -y xfonts-100dpi xfonts-75dpi || aptError "sudo apt-get install -y xfonts-100dpi xfonts-75dpi"
 			xset +fp /usr/share/fonts/X11/100dpi,/usr/share/fonts/X11/75dpi
@@ -336,6 +336,7 @@ Type=Application
 Categories=HamRadio;
 EOF
             sudo mv -f $HOME/.local/share/applications/xastir.desktop /usr/local/share/applications/
+				sed -i 's|\/usr\/share|\/usr\/local\/share|' $HOME/.xastir/config/xastir.cnf
             lxpanelctl restart
             echo "========= $APP installation complete ==========="
          else
