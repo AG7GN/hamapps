@@ -47,6 +47,7 @@ do
 done
 
 OSUPDATES=NO
+GITHUB_URL="https://github.com"
 HAMAPPS_GIT_URL="$GITHUB_URL/AG7GN/hamapps"
 
 # Check for and install hamapps.sh updates
