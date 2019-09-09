@@ -3,9 +3,9 @@
 # YAD/shell script to install or update certain ham applications, as well as 
 # update Raspbian OS and apps.
 
-VERSION="1.55"
+VERSION="1.56"
 
-if ! which hamapps.sh 1>/dev/null 2>&1
+if ! command -v hamapps.sh 1>/dev/null 2>&1
 then
    echo "hamapps.sh is not installed.  Exiting."
    sleep 5
@@ -15,7 +15,7 @@ fi
 APPS=""
 TFILE="$(mktemp)"
 echo -e "FALSE\nRaspbian OS and Apps\nCheck for Updates" > "$TFILE"
-for A in fldigi flmsg flamp flrig flwrap direwolf pat arim piardop2 chirp wsjtx xastir hamapps.sh hampi-backup-restore.sh hampi-iptables autohotspot 710.sh
+for A in fldigi flmsg flamp flrig flwrap direwolf pat arim piardop2 chirp wsjtx xastir hampi-backup-restore.sh hampi-iptables autohotspot 710.sh
 do 
 	case $A in
 		hampi-iptables|autohotspot)
@@ -47,11 +47,37 @@ do
 done
 
 OSUPDATES=NO
+HAMAPPS_GIT_URL="$GITHUB_URL/AG7GN/hamapps"
+
+# Check for and install hamapps.sh updates
+echo "============= Checking for updates to updatepi.sh and hamapps.sh ========"
+cd $HOME
+[ -d "$HOME/hamapps" ] && rm -rf hamapps/
+git clone $HAMAPPS_GIT_URL || { echo >&2 "======= git clone $HAMAPPS_GIT_URL failed ========"; exit 1; }
+INSTALLED_VER="$(grep -i "^VERSION" $(which hamapps.sh))"
+LATEST_VER="$(grep -i "^VERSION" hamapps/hamapps.sh)"
+if [[ $INSTALLED_VER == $LATEST_VER ]]
+then
+	echo "============= updatepi.sh and hamapps.sh are up to date ============="
+else
+	sudo cp -f hamapps/updatepi.desktop /usr/local/share/applications/
+	sudo cp -f hamapps/*.sh /usr/local/bin/
+	[ -f $HOME/.local/share/applications/updatepi.desktop ] && rm -f $HOME/.local/share/applications/updatepi.desktop
+	rm -rf hamapps/
+  	echo "============= updatepi.sh and hamapps.sh have been updated =============="
+  	echo
+  	yad --center --title="Update Apps/OS - version $VERSION" --info --borders=30 \
+    --no-wrap --text="A new version of this script has been installed.\n\nPlease \
+run <b>Raspberry > Hamradio > Update Pi and Ham Apps</b> again." --buttons-layout=center \
+--button=Close:0
+  	exit 0
+fi
+
 ANS="$(yad --center --title="Update Apps/OS - version $VERSION" --list --height=625 --width=400 --text-align=center \
 	--text "<b>This script will install and/or check for and install updates for the apps you select below.\n \
 If there are updates available, it will install them.</b>\n\n \
 This Pi must be connected to the Internet\nfor this script to work.\n" \
-	--separator="," --checklist --column Pick --column Applications --column Action < "$TFILE")"
+	--separator="," --checklist --column Pick --column Applications --column Action < "$TFILE" --buttons-layout=center)"
 
 if [ "$?" -eq "1" ] || [[ $ANS == "" ]]
 then 
@@ -96,7 +122,7 @@ then
    yad --center --title="Update Apps/OS - version $VERSION" --question \
        --borders=30 --no-wrap \
 	    --text="<b>Raspbian updates were installed and a reboot is required.</b>" \
-	    --button="Reboot Now":0 --button=Close:1
+	    --button="Reboot Now":0 --buttons-layout=center --button=Close:1
    if [ "$?" -eq "1" ]
    then 
       echo "" && echo "Skipped reboot" && echo ""
@@ -106,7 +132,8 @@ then
    fi
 fi 
 yad --center --title="Update Apps/OS - version $VERSION" --info --borders=30 \
-    --no-wrap --text="<b>Finished.  No reboot required.</b>" --button=Close:0
+    --no-wrap --text="<b>Finished.  No reboot required.</b>" --buttons-layout=center \
+--button=Close:0
 exit 0
 
 

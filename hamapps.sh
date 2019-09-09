@@ -16,7 +16,7 @@
 #
 #=========================================================================================
 
-VERSION="1.55"
+VERSION="1.56"
 
 GITHUB_URL="https://github.com"
 HAMLIB_LATEST_URL="$GITHUB_URL/Hamlib/Hamlib/releases/latest"
@@ -59,7 +59,7 @@ function Usage () {
    echo "Where:"
    echo "   <apps> is one or more apps, separated by comma, from this list:"
    echo "   fldigi,flmsg,flamp,flrig,flwrap,xastir,direwolf,wsjtx,arim,piardop,"
-   echo "   pat,chirp,rigctl,hamapps,hampi-iptables,autohotspot,710.sh"
+   echo "   pat,chirp,rigctl,hampi-backup-restore,hampi-iptables,autohotspot,710.sh"
    echo
    echo "   Note that if you use \"upgrade\" and the app is not already installed,"
    echo "   this script will install it."
