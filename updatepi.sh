@@ -3,7 +3,7 @@
 # YAD/shell script to install or update certain ham applications, as well as 
 # update Raspbian OS and apps.
 
-VERSION="1.56.2"
+VERSION="1.56.3"
 
 if ! command -v hamapps.sh 1>/dev/null 2>&1
 then
@@ -78,7 +78,7 @@ ANS="$(yad --center --title="Update Apps/OS - version $VERSION" --list --height=
 	--text "<b>This script will install and/or check for and install updates for the apps you select below.\n \
 If there are updates available, it will install them.</b>\n\n \
 This Pi must be connected to the Internet\nfor this script to work.\n\n \
-<span color='red'>CLOSE ALL OTHER APPS</span> before you click OK.\n" \
+<b><span color='red'>CLOSE ALL OTHER APPS</span></b> <u>before</u> you click OK.\n" \
 --separator="," --checklist --column Pick --column Applications \
 --column Action < "$TFILE" --buttons-layout=center)"
 
