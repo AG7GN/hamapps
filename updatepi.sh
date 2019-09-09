@@ -3,7 +3,7 @@
 # YAD/shell script to install or update certain ham applications, as well as 
 # update Raspbian OS and apps.
 
-VERSION="1.56.4"
+VERSION="1.56.5"
 
 if ! command -v hamapps.sh 1>/dev/null 2>&1
 then
@@ -19,7 +19,7 @@ for A in fldigi flmsg flamp flrig flwrap direwolf pat arim piardop2 chirp wsjtx 
 do 
 	case $A in
 		hampi-iptables|autohotspot)
-			echo -e "FALSE\n[$A](https://github.com/AG7GN/$A)\nCheck for Updates" >> "$TFILE" 
+			echo -e "FALSE\n$A\nCheck for Updates" >> "$TFILE" 
 			;;
 		chirp)
 			if command -v chirpw 1>/dev/null 2>&1
