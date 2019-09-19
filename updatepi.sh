@@ -3,7 +3,7 @@
 # YAD/shell script to install or update certain ham applications, as well as 
 # update Raspbian OS and apps.
 
-VERSION="1.56.5"
+VERSION="1.57.0"
 
 if ! command -v hamapps.sh 1>/dev/null 2>&1
 then
@@ -49,6 +49,17 @@ done
 OSUPDATES=NO
 GITHUB_URL="https://github.com"
 HAMAPPS_GIT_URL="$GITHUB_URL/AG7GN/hamapps"
+
+# Check for Internet connectivity
+if ! ping -q -w 1 -c 1 github.com > /dev/null 2>&1
+then
+   yad --center --title="Update Apps/OS - version $VERSION" --info --borders=30 \
+       --text="<b>No Internet connection found.  Check your Internet connection \
+and run this script again.</b>" --buttons-layout=center \
+       --button=Close:0
+   exit 1
+fi
+
 
 # Check for and install hamapps.sh updates
 echo "============= Checking for updates to updatepi.sh and hamapps.sh ========"
