@@ -16,7 +16,7 @@
 #
 #=========================================================================================
 
-VERSION="1.58.0"
+VERSION="1.58.1"
 
 GITHUB_URL="https://github.com"
 HAMLIB_LATEST_URL="$GITHUB_URL/Hamlib/Hamlib/releases/latest"
@@ -34,7 +34,7 @@ PIARDOP_URL="http://www.cantab.net/users/john.wiseman/Downloads/Beta/piardop2"
 PAT_GIT_URL="$GITHUB_URL/la5nta/pat/releases"
 CHIRP_URL="https://trac.chirp.danplanet.com/chirp_daily/LATEST"
 HAMAPPS_GIT_URL="$GITHUB_URL/AG7GN/hamapps"
-$HAMPIUTILS_GIT_URL="$GITHUB_URL/AG7GN/hampi-utilities"
+HAMPIUTILS_GIT_URL="$GITHUB_URL/AG7GN/hampi-utilities"
 IPTABLES_GIT_URL="$GITHUB_URL/AG7GN/hampi-iptables"
 AUTOHOTSPOT_GIT_URL="$GITHUB_URL/AG7GN/autohotspot"
 KENWOOD_GIT_URL="$GITHUB_URL/AG7GN/kenwood"
