@@ -16,7 +16,7 @@
 #
 #=========================================================================================
 
-VERSION="1.58.1"
+VERSION="1.58.3"
 
 GITHUB_URL="https://github.com"
 HAMLIB_LATEST_URL="$GITHUB_URL/Hamlib/Hamlib/releases/latest"
@@ -526,6 +526,7 @@ EOF
 			else
       		cp -f hampi-utilities/hampi-utilities.version /usr/local/src/hampi/
       		sudo cp -f hampi-utilities/*.sh /usr/local/bin/
+      		sudo cp -f hampi-utilities/*.desktop /usr/local/share/applications/
 	      	echo "============= hampi-utilities installed =============="
 			fi
      		rm -rf hampi-utilities/
