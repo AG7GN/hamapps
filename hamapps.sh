@@ -16,7 +16,7 @@
 #
 #=========================================================================================
 
-VERSION="1.57.1"
+VERSION="1.58.0"
 
 GITHUB_URL="https://github.com"
 HAMLIB_LATEST_URL="$GITHUB_URL/Hamlib/Hamlib/releases/latest"
@@ -34,6 +34,7 @@ PIARDOP_URL="http://www.cantab.net/users/john.wiseman/Downloads/Beta/piardop2"
 PAT_GIT_URL="$GITHUB_URL/la5nta/pat/releases"
 CHIRP_URL="https://trac.chirp.danplanet.com/chirp_daily/LATEST"
 HAMAPPS_GIT_URL="$GITHUB_URL/AG7GN/hamapps"
+$HAMPIUTILS_GIT_URL="$GITHUB_URL/AG7GN/hampi-utilities"
 IPTABLES_GIT_URL="$GITHUB_URL/AG7GN/hampi-iptables"
 AUTOHOTSPOT_GIT_URL="$GITHUB_URL/AG7GN/autohotspot"
 KENWOOD_GIT_URL="$GITHUB_URL/AG7GN/kenwood"
@@ -99,7 +100,7 @@ function installHamlib () {
 	#echo "=========== Installing/upgrading Hamlib (rigctl) ==========="
 	##sudo apt-get remove libhamlib2 -y
 	#sudo apt-get install texinfo -y
-   #if ./configure && make && sudo make install && sudo ldconfig
+   #if ./configure && make -j6 && sudo make install && sudo ldconfig
    #then
    #   cd $HOME
    #   rm -rf $HAMLIB_DIR
@@ -237,7 +238,7 @@ do
                echo "========= $APP dependencies are installed.  =========="
                echo "=========== Installing $FNAME ==========="
                  cd $FNAME
-                 if ./configure && make && sudo make install
+                 if ./configure && make -j6 && sudo make install
                  then
                     cd ..
                     rm -rf $FNAME
@@ -318,7 +319,7 @@ do
          mkdir -p build
          cd build
          ../configure CPPFLAGS="-I/usr/include/geotiff"
-         if make && sudo make install
+         if make -j6 && sudo make install
          then
             sudo chmod u+s /usr/local/bin/xastir
             cat > $HOME/.local/share/applications/xastir.desktop << EOF
@@ -387,7 +388,7 @@ EOF
 				#cd $(ls -td dire* | head -1)
             #sed -i 's/#CFLAGS += -DUSE_HAMLIB/CFLAGS += -DUSE_HAMLIB/' Makefile.linux
             #sed -i 's/#LDFLAGS += -lhamlib/LDFLAGS += -lhamlib/' Makefile.linux
-            if make && sudo make install
+            if make -j6 && sudo make install
             then
                # Make a default config file if this is a new installation
                [[ ${1,,} == "install" ]] && make install-conf
@@ -457,7 +458,7 @@ EOF
                tar xzf $TAR_FILE
                ARIM_DIR="$(echo $TAR_FILE | sed 's/.tar.gz//')"
                cd $ARIM_DIR
-               if ./configure && make && sudo make install
+               if ./configure && make -j6 && sudo make install
                then
 						lxpanelctl restart
                   cd $HOME
@@ -506,6 +507,28 @@ EOF
 			fi
      		[ -f $HOME/.local/share/applications/updatepi.desktop ] && rm -f $HOME/.local/share/applications/updatepi.desktop
       	rm -rf hamapps/
+      	;;
+      hampi-utilities)
+      	echo "============= hampi-utilities install/update requested ========"
+      	cd $HOME
+      	[ -d "$HOME/hampi-utilities" ] && rm -rf hamp-utilities/
+      	git clone $HAMPIUTILS_GIT_URL || { echo >&2 "======= git clone $HAMPIUTILS_GIT_URL failed ========"; exit 1; }
+      	if [ -s /usr/local/src/hampi/hampi-utilities.version ]
+			then
+				INSTALLED_VER="$(grep -i "^VERSION" /usr/local/src/hampi/hampi-utilities.version)"
+			else
+			   INSTALLED_VER="NONE"
+			fi
+			LATEST_VER="$(grep -i "^VERSION" hampi-utilities/hampi-utilities.version)"
+			if [[ $INSTALLED_VER == $LATEST_VER ]]
+			then
+				echo "============= hampi-utilities are up to date ============="
+			else
+      		cp -f hampi-utilities/hampi-utilities.version /usr/local/src/hampi/
+      		sudo cp -f hampi-utilities/*.sh /usr/local/bin/
+	      	echo "============= hampi-utilities installed =============="
+			fi
+     		rm -rf hampi-utilities/
       	;;
       autohotspot)
       	echo "============= autohotspot install/update requested ========"
