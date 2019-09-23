@@ -3,7 +3,7 @@
 # YAD/shell script to install or update certain ham applications, as well as 
 # update Raspbian OS and apps.
 
-VERSION="1.59.1"
+VERSION="1.59.3"
 
 if ! command -v hamapps.sh 1>/dev/null 2>&1
 then
@@ -17,7 +17,7 @@ HELPSCRIPT="/usr/local/bin/updatepi-help.sh"
 APPS=""
 TFILE="$(mktemp)"
 echo -e "FALSE\nRaspbian OS and Apps\nCheck for Updates" > "$TFILE"
-for A in fldigi flmsg flamp flrig flwrap direwolf pat arim piardop2 chirp wsjtx xastir hampi-backup-restore.sh hampi-iptables hampi-utilities autohotspot 710.sh
+for A in fldigi flmsg flamp flrig flwrap direwolf pat arim piardop2 chirp wsjtx xastir hampi-backup-restore.sh hampi-iptables hampi-utilities hamapps autohotspot 710.sh
 do 
 	case $A in
 		hampi-iptables|autohotspot)
@@ -38,6 +38,9 @@ do
 			else
 				echo -e "FALSE\n$A\nNew Install" >> "$TFILE"
 			fi
+			;;
+		hamapps)
+			echo -e "FALSE\n$A\nUpdated Automatically" >> "$TFILE"
 			;;
 		*)
 		   if command -v $A 1>/dev/null 2>&1 
@@ -98,7 +101,8 @@ fi
 
 ANS="$(yad --center --title="Update Apps/OS - version $VERSION" --list --borders=10 --height=625 --width=480 --text-align=center \
 	--text "<b>This script will install and/or check for and install updates for the apps you select below.  \
-If there are updates available, it will install them.</b>\n\nFor information about each app, double-click the app's name.  \
+If there are updates available, it will install them.</b>\n\n \
+For information about or help with an app, double-click the app's name.  \
 This will open the Pi's web browser.\n\n \
 This Pi must be connected to the Internet for this script to work.\n\n \
 <b><span color='red'>CLOSE ALL OTHER APPS</span></b> <u>before</u> you click OK.\n" \

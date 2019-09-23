@@ -16,7 +16,7 @@
 #
 #=========================================================================================
 
-VERSION="1.59.1"
+VERSION="1.59.3"
 
 GITHUB_URL="https://github.com"
 HAMLIB_LATEST_URL="$GITHUB_URL/Hamlib/Hamlib/releases/latest"
@@ -497,7 +497,7 @@ EOF
          echo "============= pat installed ============="
          ;;
       hamapps*)
-      	echo "============= hamapps.sh+updatepi.sh install/update requested ========"
+      	echo "============= hamapps install/update requested ========"
       	cd $HOME
       	[ -d "$HOME/hamapps" ] && rm -rf hamapps/
       	git clone $HAMAPPS_GIT_URL || { echo >&2 "======= git clone $HAMAPPS_GIT_URL failed ========"; exit 1; }
@@ -505,11 +505,11 @@ EOF
 			LATEST_VER="$(grep -i "^VERSION" hamapps/hamapps.sh)"
 			if [[ $INSTALLED_VER == $LATEST_VER ]]
 			then
-				echo "============= hamapps.sh+updatepi.sh are up to date ============="
+				echo "============= hamapps are up to date ============="
 			else
       		sudo cp -f hamapps/updatepi.desktop /usr/local/share/applications/
       		sudo cp -f hamapps/*.sh /usr/local/bin/
-	      	echo "============= hamapps.sh+updatepi.sh installed =============="
+	      	echo "============= hamapps installed =============="
 			fi
      		[ -f $HOME/.local/share/applications/updatepi.desktop ] && rm -f $HOME/.local/share/applications/updatepi.desktop
       	rm -rf hamapps/
