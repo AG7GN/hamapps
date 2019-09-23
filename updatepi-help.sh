@@ -6,7 +6,7 @@
 # passed to this script.  This scriot uses the app name as an array index and then
 # locates the URI associated with that app, and launches the $BROWSER to that URI.
 
-VERSION="1.0.0"
+VERSION="1.59.0"
 
 BROWSER="$(command -v chromium-browser)"
 declare -A APPS
