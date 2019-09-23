@@ -3,7 +3,7 @@
 # YAD/shell script to install or update certain ham applications, as well as 
 # update Raspbian OS and apps.
 
-VERSION="1.58.5"
+VERSION="1.59.0"
 
 if ! command -v hamapps.sh 1>/dev/null 2>&1
 then
@@ -11,6 +11,8 @@ then
    sleep 5
    exit 1
 fi
+
+HELPSCRIPT="/usr/local/bin/updatepi-help.sh"
 
 APPS=""
 TFILE="$(mktemp)"
@@ -24,7 +26,7 @@ do
 		chirp)
 			if command -v chirpw 1>/dev/null 2>&1
 			then
-				echo -e "FALSE\n$A\nCheck for Updates" >> "$TFILE" 
+					  echo -e "FALSE\n$A\nCheck for Updates" >> "$TFILE" 
 			else
 				echo -e "FALSE\n$A\nNew Install" >> "$TFILE"
 			fi
@@ -68,7 +70,7 @@ and run this script again.</b>" --buttons-layout=center \
    exit 1
 fi
 
-
+<< END_COMMENT
 # Check for and install hamapps.sh updates
 echo "============= Checking for updates to updatepi.sh and hamapps.sh ========"
 cd $HOME
@@ -92,13 +94,17 @@ run <b>Raspberry > Hamradio > Update Pi and Ham Apps</b> again." --buttons-layou
 --button=Close:0
   	exit 0
 fi
+END_COMMENT
 
-ANS="$(yad --center --title="Update Apps/OS - version $VERSION" --list --height=625 --width=400 --text-align=center \
-	--text "<b>This script will install and/or check for and install updates for the apps you select below.\n \
-If there are updates available, it will install them.</b>\n\n \
-This Pi must be connected to the Internet\nfor this script to work.\n\n \
+ANS="$(yad --center --title="Update Apps/OS - version $VERSION" --list --borders=10 --height=625 --width=480 --text-align=center \
+	--text "<b>This script will install and/or check for and install updates for the apps you select below.  \
+If there are updates available, it will install them.</b>\n\nFor information about each app, double-click the app's name.  \
+This will open the Pi's web browser.\n\n \
+This Pi must be connected to the Internet for this script to work.\n\n \
 <b><span color='red'>CLOSE ALL OTHER APPS</span></b> <u>before</u> you click OK.\n" \
---separator="," --checklist --column Pick --column Applications \
+--separator="," --checklist --grid-lines=hor \
+--dclick-action="sh -c \"echo %s | cut -d' ' -f2 2>&1 | $HELPSCRIPT 2>/dev/null\"" \
+--column Pick --column Applications \
 --column Action < "$TFILE" --buttons-layout=center)"
 
 if [ "$?" -eq "1" ] || [[ $ANS == "" ]]
