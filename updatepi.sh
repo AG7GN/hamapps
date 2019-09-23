@@ -3,7 +3,7 @@
 # YAD/shell script to install or update certain ham applications, as well as 
 # update Raspbian OS and apps.
 
-VERSION="1.59.0"
+VERSION="1.59.1"
 
 if ! command -v hamapps.sh 1>/dev/null 2>&1
 then
@@ -70,7 +70,7 @@ and run this script again.</b>" --buttons-layout=center \
    exit 1
 fi
 
-<< END_COMMENT
+
 # Check for and install hamapps.sh updates
 echo "============= Checking for updates to updatepi.sh and hamapps.sh ========"
 cd $HOME
@@ -94,7 +94,7 @@ run <b>Raspberry > Hamradio > Update Pi and Ham Apps</b> again." --buttons-layou
 --button=Close:0
   	exit 0
 fi
-END_COMMENT
+
 
 ANS="$(yad --center --title="Update Apps/OS - version $VERSION" --list --borders=10 --height=625 --width=480 --text-align=center \
 	--text "<b>This script will install and/or check for and install updates for the apps you select below.  \
