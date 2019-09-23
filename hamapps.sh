@@ -16,7 +16,7 @@
 #
 #=========================================================================================
 
-VERSION="1.58.3"
+VERSION="1.58.4"
 
 GITHUB_URL="https://github.com"
 HAMLIB_LATEST_URL="$GITHUB_URL/Hamlib/Hamlib/releases/latest"
@@ -191,6 +191,12 @@ sudo apt-get --fix-broken -y install || aptError "sudo apt-get --fix-broken -y i
 sudo apt-get install -y extra-xdg-menus bc || aptError "sudo apt-get install -y extra-xdg-menus bc"
 
 APPS="$(echo "${2,,}" | tr ',' '\n' | sort -u | xargs)" 
+
+if ! [ -d /usr/local/src/hampi ]
+then
+	sudo mkdir -p /usr/local/src/hampi
+fi	
+sudo chown pi:pi /usr/local/src/hampi
 
 for APP in $APPS
 do
@@ -525,6 +531,7 @@ EOF
 				echo "============= hampi-utilities are up to date ============="
 			else
       		cp -f hampi-utilities/hampi-utilities.version /usr/local/src/hampi/
+      		cp -f hampi-utilities/*.conf /usr/local/src/hampi/
       		sudo cp -f hampi-utilities/*.sh /usr/local/bin/
       		sudo cp -f hampi-utilities/*.desktop /usr/local/share/applications/
 	      	echo "============= hampi-utilities installed =============="
