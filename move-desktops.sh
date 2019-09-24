@@ -9,7 +9,7 @@
 #
 #=========================================================================================
 
-VERSION="1.0.1"
+VERSION="1.1.0"
 
 for APP in fldigi flamp flmsg flrig flwrap flarq
 do
@@ -30,7 +30,11 @@ if ls $HOME/.local/share/applications/direwolf*.desktop 1> /dev/null 2>&1
 then
    sed -i 's|\/home\/pi\/d|\/usr\/local\/bin\/d|' $HOME/.local/share/applications/direwolf*.desktop
 	sudo mv -f $HOME/.local/share/applications/direwolf*.desktop /usr/local/share/applications/
-fi         
+fi  
+if ls $HOME/dw-*.sh 1> /dev/null 2>&1
+then      
+	sudo mv -f $HOME/dw-*.sh /usr/local/bin/
+fi
 
 [ -f $HOME/.local/share/applications/updatepi.desktop ] && rm -f $HOME/.local/share/applications/updatepi.desktop
 [ -f $HOME/.local/share/applications/autohotspot.desktop ] && rm -f $HOME/.local/share/applications/autohotspot.desktop

@@ -3,7 +3,7 @@
 # YAD/shell script to install or update certain ham applications, as well as 
 # update Raspbian OS and apps.
 
-VERSION="1.59.3"
+VERSION="1.60.0"
 
 if ! command -v hamapps.sh 1>/dev/null 2>&1
 then
@@ -12,7 +12,31 @@ then
    exit 1
 fi
 
-HELPSCRIPT="/usr/local/bin/updatepi-help.sh"
+function Help () {
+	BROWSER="$(command -v chromium-browser)"
+	declare -A APPS
+	APPS[fldigi]="http://www.w1hkj.com/FldigiHelp"
+	APPS[flmsg]="http://www.w1hkj.com/flmsg-help"
+	APPS[flamp]="http://www.w1hkj.com/flamp-help"
+	APPS[flrig]="http://www.w1hkj.com/flrig-help"
+	APPS[flwrap]="http://www.w1hkj.com/flwrap-help"
+	APPS[direwolf]="https://github.com/wb2osz/direwolf"
+	APPS[pat]="https://getpat.io/"
+	APPS[arim]="https://www.whitemesa.net/arim/arim.html"
+	APPS[piardop2]="https://www.whitemesa.net/arim/arim.html"
+	APPS[chirp]="https://chirp.danplanet.com/projects/chirp/wiki/Home"
+	APPS[wsjtx]="https://physics.princeton.edu/pulsar/K1JT/wsjtx.html"
+	APPS[xastir]="http://xastir.org/index.php/Main_Page"
+	   APPS[hampi-backup-restore.sh]="https://github.com/AG7GN/hampi-backup-restore/blob/master/README.md"
+	APPS[hamapps]="https://github.com/AG7GN/hamapps/blob/master/README.md"
+	APPS[hampi-iptables]="https://github.com/AG7GN/hampi-iptables/blob/master/README.md"
+	APPS[hampi-utilities]="https://github.com/AG7GN/hampi-utilities/blob/master/README.md"
+	APPS[autohotspot]="https://github.com/AG7GN/autohotspot/blob/master/README.md"
+	APPS[710.sh]="https://github.com/AG7GN/kenwood/blob/master/README.md"
+	APP="$2"
+	$BROWSER ${APPS[$APP]} &
+}
+export -f Help
 
 APPS=""
 TFILE="$(mktemp)"
@@ -53,12 +77,6 @@ do
 	esac
 done
 
-COLUMN=""
-for C in $APPS
-do
-   COLUMN+="FALSE $C "
-done
-
 OSUPDATES=NO
 GITHUB_URL="https://github.com"
 HAMAPPS_GIT_URL="$GITHUB_URL/AG7GN/hamapps"
@@ -72,7 +90,6 @@ and run this script again.</b>" --buttons-layout=center \
        --button=Close:0
    exit 1
 fi
-
 
 # Check for and install hamapps.sh updates
 echo "============= Checking for updates to updatepi.sh and hamapps.sh ========"
@@ -107,8 +124,8 @@ This will open the Pi's web browser.\n\n \
 This Pi must be connected to the Internet for this script to work.\n\n \
 <b><span color='red'>CLOSE ALL OTHER APPS</span></b> <u>before</u> you click OK.\n" \
 --separator="," --checklist --grid-lines=hor \
---dclick-action="sh -c \"echo %s | cut -d' ' -f2 2>&1 | $HELPSCRIPT 2>/dev/null\"" \
---column Pick --column Applications \
+--dclick-action="bash -c \"Help %s\"" \
+--auto-kill --column Pick --column Applications \
 --column Action < "$TFILE" --buttons-layout=center)"
 
 if [ "$?" -eq "1" ] || [[ $ANS == "" ]]
