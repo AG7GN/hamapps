@@ -16,7 +16,7 @@
 #
 #=========================================================================================
 
-VERSION="1.60.0"
+VERSION="1.60.1"
 
 GITHUB_URL="https://github.com"
 HAMLIB_LATEST_URL="$GITHUB_URL/Hamlib/Hamlib/releases/latest"
@@ -100,7 +100,7 @@ function installHamlib () {
 	#echo "=========== Installing/upgrading Hamlib (rigctl) ==========="
 	##sudo apt-get remove libhamlib2 -y
 	#sudo apt-get install texinfo -y
-   #if ./configure && make -j6 && sudo make install && sudo ldconfig
+   #if ./configure && make -j4 && sudo make install && sudo ldconfig
    #then
    #   cd $HOME
    #   rm -rf $HAMLIB_DIR
@@ -244,7 +244,7 @@ do
                echo "========= $APP dependencies are installed.  =========="
                echo "=========== Installing $FNAME ==========="
                  cd $FNAME
-                 if ./configure && make -j6 && sudo make install
+                 if ./configure && make -j4 && sudo make install
                  then
                     cd ..
                     rm -rf $FNAME
@@ -325,7 +325,7 @@ do
          mkdir -p build
          cd build
          ../configure CPPFLAGS="-I/usr/include/geotiff"
-         if make -j6 && sudo make install
+         if make -j4 && sudo make install
          then
             sudo chmod u+s /usr/local/bin/xastir
             cat > $HOME/.local/share/applications/xastir.desktop << EOF
@@ -394,7 +394,7 @@ EOF
 				#cd $(ls -td dire* | head -1)
             #sed -i 's/#CFLAGS += -DUSE_HAMLIB/CFLAGS += -DUSE_HAMLIB/' Makefile.linux
             #sed -i 's/#LDFLAGS += -lhamlib/LDFLAGS += -lhamlib/' Makefile.linux
-            if make -j6 && sudo make install
+            if make -j4 && sudo make install
             then
                # Make a default config file if this is a new installation
                [[ ${1,,} == "install" ]] && make install-conf
@@ -464,7 +464,7 @@ EOF
                tar xzf $TAR_FILE
                ARIM_DIR="$(echo $TAR_FILE | sed 's/.tar.gz//')"
                cd $ARIM_DIR
-               if ./configure && make -j6 && sudo make install
+               if ./configure && make -j4 && sudo make install
                then
 						lxpanelctl restart
                   cd $HOME
