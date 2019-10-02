@@ -16,7 +16,7 @@
 #
 #=========================================================================================
 
-VERSION="1.60.1"
+VERSION="1.61.0"
 
 GITHUB_URL="https://github.com"
 HAMLIB_LATEST_URL="$GITHUB_URL/Hamlib/Hamlib/releases/latest"
@@ -533,6 +533,7 @@ EOF
       		cp -f hampi-utilities/hampi-utilities.version /usr/local/src/hampi/
       		cp -f hampi-utilities/*.conf /usr/local/src/hampi/
       		sudo cp -f hampi-utilities/*.sh /usr/local/bin/
+      		sudo cp -f hampi-utilities/*.py /usr/local/bin/
       		sudo cp -f hampi-utilities/*.desktop /usr/local/share/applications/
 	      	echo "============= hampi-utilities installed =============="
 			fi
