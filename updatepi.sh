@@ -3,7 +3,7 @@
 # YAD/shell script to install or update certain ham applications, as well as 
 # update Raspbian OS and apps.
 
-VERSION="1.61.1"
+VERSION="1.61.2"
 
 if ! command -v hamapps.sh 1>/dev/null 2>&1
 then
@@ -27,7 +27,7 @@ function Help () {
 	APPS[chirp]="https://chirp.danplanet.com/projects/chirp/wiki/Home"
 	APPS[wsjtx]="https://physics.princeton.edu/pulsar/K1JT/wsjtx.html"
 	APPS[xastir]="http://xastir.org/index.php/Main_Page"
-	   APPS[hampi-backup-restore.sh]="https://github.com/AG7GN/hampi-backup-restore/blob/master/README.md"
+	APPS[hampi-backup-restore.sh]="https://github.com/AG7GN/hampi-backup-restore/blob/master/README.md"
 	APPS[hamapps]="https://github.com/AG7GN/hamapps/blob/master/README.md"
 	APPS[hampi-iptables]="https://github.com/AG7GN/hampi-iptables/blob/master/README.md"
 	APPS[hampi-utilities]="https://github.com/AG7GN/hampi-utilities/blob/master/README.md"
@@ -114,6 +114,12 @@ run <b>Raspberry > Hamradio > Update Pi and Ham Apps</b> again." --buttons-layou
   	exit 0
 fi
 rm -rf hamapps/
+
+# Move the direwolf scripts to /usr/local/bin if necessary
+if ls $HOME/dw-*.sh >/dev/null 2>&1
+then
+	sudo mv -f $HOME/dw-*.sh /usr/local/bin/
+fi
 
 ANS="$(yad --center --title="Update Apps/OS - version $VERSION" --list --borders=10 --height=625 --width=480 --text-align=center \
 	--text "<b>This script will install and/or check for and install updates for the apps you select below.  \
