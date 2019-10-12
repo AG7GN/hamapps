@@ -3,7 +3,7 @@
 # YAD/shell script to install or update certain ham applications, as well as 
 # update Raspbian OS and apps.
 
-VERSION="1.61.2"
+VERSION="1.62.1"
 
 if ! command -v hamapps.sh 1>/dev/null 2>&1
 then
@@ -33,6 +33,7 @@ function Help () {
 	APPS[hampi-utilities]="https://github.com/AG7GN/hampi-utilities/blob/master/README.md"
 	APPS[autohotspot]="https://github.com/AG7GN/autohotspot/blob/master/README.md"
 	APPS[710.sh]="https://github.com/AG7GN/kenwood/blob/master/README.md"
+	APPS[pmon]="https://www.p4dragon.com/en/PMON.html"
 	APP="$2"
 	$BROWSER ${APPS[$APP]} &
 }
@@ -41,7 +42,7 @@ export -f Help
 APPS=""
 TFILE="$(mktemp)"
 echo -e "FALSE\nRaspbian OS and Apps\nCheck for Updates" > "$TFILE"
-for A in fldigi flmsg flamp flrig flwrap direwolf pat arim piardop2 chirp wsjtx xastir hampi-backup-restore.sh hampi-iptables hampi-utilities hamapps autohotspot 710.sh
+for A in fldigi flmsg flamp flrig flwrap direwolf pat arim piardop2 chirp wsjtx xastir hampi-backup-restore.sh hampi-iptables hampi-utilities hamapps autohotspot 710.sh pmon
 do 
 	case $A in
 		hampi-iptables|autohotspot)

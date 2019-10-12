@@ -16,7 +16,7 @@
 #
 #=========================================================================================
 
-VERSION="1.61.2"
+VERSION="1.62.1"
 
 GITHUB_URL="https://github.com"
 HAMLIB_LATEST_URL="$GITHUB_URL/Hamlib/Hamlib/releases/latest"
@@ -39,6 +39,7 @@ IPTABLES_GIT_URL="$GITHUB_URL/AG7GN/hampi-iptables"
 AUTOHOTSPOT_GIT_URL="$GITHUB_URL/AG7GN/autohotspot"
 KENWOOD_GIT_URL="$GITHUB_URL/AG7GN/kenwood"
 HAMPI_BU_RS_GIT_URL="$GITHUB_URL/AG7GN/hampi-backup-restore"
+PMON_REPO="https://www.scs-ptc.com/repo/packages/"
 
 export CXXFLAGS='-O2 -march=armv8-a -mtune=cortex-a53'
 export CFLAGS='-O2 -march=armv8-a -mtune=cortex-a53'
@@ -639,6 +640,21 @@ EOF
          	cd $HOME
          	sudo rm -rf "$CHIRP_DIR"
 			fi
+         ;;
+      pmon)
+         cd $HOME
+         echo "============= pmon installation requested ============"
+         if grep -q scs-pts /etc/apt/sources.list.d/scs.list 2>/dev/null
+         then
+            sudo apt install pmon || aptError "sudo apt install pmon"
+         else
+            echo "deb $PMON_REPO buster non-free" | sudo tee /etc/apt/sources.list.d/scs.list > /dev/null
+            wget -q -O - ${PMON_REPO}scs.gpg.key | sudo apt-key add -
+            sudo apt update
+            sudo apt install pmon || aptError "sudo apt install pmon"
+         fi
+         echo "============= pmon installed ============"
+         cd $HOME
          ;;
       *)
          echo "Skipping unknown app \"$APP\"."

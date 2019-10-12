@@ -1,6 +1,6 @@
 ## Hampi: Update Pi and Ham Apps Scripts
 
-Version: 20190922  
+Version: 20191012  
 Author: Steve Magnuson, AG7GN
 
 These scripts are used to install/update various ham radio applications as well as regular Raspbian Buster updates  
@@ -9,12 +9,6 @@ These scripts are used to install/update various ham radio applications as well 
 
 - Raspberry Pi 3B or 3B+ running Raspbian Buster ONLY (__does not work on Raspbian Stretch or Compass__)
 - Familiarity with Terminal and basic LINUX commands, including sudo
-
-### Release Notes
-
-- Added `sudo --fix-broken install` command to hamapps.sh to fix a problem with fortran packages that accompany the wsjtx installation.
-- Moved autohotspot script install location to /usr/local/bin
-- Added hampi-backup-restore.sh
 
 ## Download and Install
 
