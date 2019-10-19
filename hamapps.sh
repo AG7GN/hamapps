@@ -16,7 +16,7 @@
 #
 #=========================================================================================
 
-VERSION="1.62.1"
+VERSION="1.63.1"
 
 GITHUB_URL="https://github.com"
 HAMLIB_LATEST_URL="$GITHUB_URL/Hamlib/Hamlib/releases/latest"
@@ -40,6 +40,7 @@ AUTOHOTSPOT_GIT_URL="$GITHUB_URL/AG7GN/autohotspot"
 KENWOOD_GIT_URL="$GITHUB_URL/AG7GN/kenwood"
 HAMPI_BU_RS_GIT_URL="$GITHUB_URL/AG7GN/hampi-backup-restore"
 PMON_REPO="https://www.scs-ptc.com/repo/packages/"
+PMON_GIT_URL="$GITHUB_URL/AG7GN/pmon"
 
 export CXXFLAGS='-O2 -march=armv8-a -mtune=cortex-a53'
 export CFLAGS='-O2 -march=armv8-a -mtune=cortex-a53'
@@ -536,6 +537,7 @@ EOF
       		sudo cp -f hampi-utilities/*.sh /usr/local/bin/
       		sudo cp -f hampi-utilities/*.py /usr/local/bin/
       		sudo cp -f hampi-utilities/*.desktop /usr/local/share/applications/
+      		sudo cp -f hampi-utilities/*.template /usr/local/share/applications/
 	      	echo "============= hampi-utilities installed =============="
 			fi
      		rm -rf hampi-utilities/
@@ -653,9 +655,20 @@ EOF
             sudo apt update
             sudo apt install pmon || aptError "sudo apt install pmon"
          fi
-         echo "============= pmon installed ============"
-         cd $HOME
-         ;;
+      	[ -d "$HOME/pmon" ] && rm -rf pmon/
+      	git clone $PMON_GIT_URL || { echo >&2 "======= git clone $PMON_GIT_URL failed ========"; exit 1; }
+     		INSTALLED_VER="$(grep -i "^VERSION" /usr/local/bin/pmon.sh)"
+     		LATEST_VER="$(grep -i "^VERSION" pmon/pmon.sh)"
+      	if [ -s /usr/local/bin/pmon.sh ] && [[ $INSTALLED_VER == $LATEST_VER ]]
+      	then
+     			echo "============= pmon scripts are up to date ============="
+			else      			
+      		sudo cp pmon/pmon.sh /usr/local/bin/
+      		sudo cp pmon/pmon.desktop /usr/local/share/applications/
+      		echo "============= pmon and scripts installed ================="
+      	fi
+     		rm -rf pmon/
+     		;;
       *)
          echo "Skipping unknown app \"$APP\"."
          ;;

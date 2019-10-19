@@ -3,7 +3,7 @@
 # YAD/shell script to install or update certain ham applications, as well as 
 # update Raspbian OS and apps.
 
-VERSION="1.62.1"
+VERSION="1.63.1"
 
 if ! command -v hamapps.sh 1>/dev/null 2>&1
 then
@@ -38,6 +38,8 @@ function Help () {
 	$BROWSER ${APPS[$APP]} &
 }
 export -f Help
+
+REBOOT="NO"
 
 APPS=""
 TFILE="$(mktemp)"
@@ -172,11 +174,11 @@ else
    fi
 fi
 
-if [ -a /var/run/reboot-required ]
+if [ -a /var/run/reboot-required ] || [[ $REBOOT == "YES" ]]
 then 
    yad --center --title="Update Apps/OS - version $VERSION" --question \
        --borders=30 --no-wrap \
-	    --text="<b>Raspbian updates were installed and a reboot is required.</b>" \
+	    --text="<b>Reboot Required</b>" \
 	    --button="Reboot Now":0 --buttons-layout=center --button=Close:1
    if [ "$?" -eq "1" ]
    then 
@@ -187,7 +189,7 @@ then
    fi
 fi 
 yad --center --title="Update Apps/OS - version $VERSION" --info --borders=30 \
-    --no-wrap --text="<b>Finished.  No reboot required.</b>" --buttons-layout=center \
+    --no-wrap --text="<b>Finished.</b>" --buttons-layout=center \
 --button=Close:0
 exit 0
 
