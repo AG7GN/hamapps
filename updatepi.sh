@@ -3,7 +3,7 @@
 # YAD/shell script to install or update certain ham applications, as well as 
 # update Raspbian OS and apps.
 
-VERSION="1.63.1"
+VERSION="1.64.3"
 
 if ! command -v hamapps.sh 1>/dev/null 2>&1
 then
@@ -124,6 +124,18 @@ then
 	sudo mv -f $HOME/dw-*.sh /usr/local/bin/
 fi
 
+# Check for presence of system LXDE-pi autostart and insert check-piano.sh if not 
+# already present
+AUTOSTART="/etc/xdg/lxsession/LXDE-pi/autostart"
+if [ -s $AUTOSTART ] 
+then
+	if ! grep -q check-piano.sh $AUTOSTART 2>/dev/null
+	then
+		sudo sed -i '/@pcmanfm .*/a @bash \/usr\/local\/bin\/check-piano.sh' $AUTOSTART
+		REBOOT="YES"
+	fi
+fi
+
 ANS="$(yad --center --title="Update Apps/OS - version $VERSION" --list --borders=10 --height=625 --width=480 --text-align=center \
 	--text "<b>This script will install and/or check for and install updates for the apps you select below.  \
 If there are updates available, it will install them.</b>\n\n \
@@ -156,6 +168,7 @@ else
       echo "Checking for and installing updates for $UPDATES..."
 		echo
       $(which hamapps.sh) upgrade $UPDATES
+      [ $? -eq 2 ] && REBOOT="YES"
 	fi
    echo
    if [[ $INSTALLS != "" ]]
@@ -163,6 +176,7 @@ else
       echo "Installing $INSTALLS..."
 		echo
       $(which hamapps.sh) install $INSTALLS
+      [ $? -eq 2 ] && REBOOT="YES"
 	fi
    echo
    if [[ $OSUPDATES == "YES" ]]
@@ -174,7 +188,7 @@ else
    fi
 fi
 
-if [ -a /var/run/reboot-required ] || [[ $REBOOT == "YES" ]]
+if [[ $REBOOT == "YES" ]]
 then 
    yad --center --title="Update Apps/OS - version $VERSION" --question \
        --borders=30 --no-wrap \

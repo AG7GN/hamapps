@@ -16,7 +16,7 @@
 #
 #=========================================================================================
 
-VERSION="1.63.1"
+VERSION="1.64.3"
 
 GITHUB_URL="https://github.com"
 HAMLIB_LATEST_URL="$GITHUB_URL/Hamlib/Hamlib/releases/latest"
@@ -41,6 +41,8 @@ KENWOOD_GIT_URL="$GITHUB_URL/AG7GN/kenwood"
 HAMPI_BU_RS_GIT_URL="$GITHUB_URL/AG7GN/hampi-backup-restore"
 PMON_REPO="https://www.scs-ptc.com/repo/packages/"
 PMON_GIT_URL="$GITHUB_URL/AG7GN/pmon"
+
+REBOOT="NO"
 
 export CXXFLAGS='-O2 -march=armv8-a -mtune=cortex-a53'
 export CFLAGS='-O2 -march=armv8-a -mtune=cortex-a53'
@@ -539,6 +541,7 @@ EOF
       		sudo cp -f hampi-utilities/*.desktop /usr/local/share/applications/
       		sudo cp -f hampi-utilities/*.template /usr/local/share/applications/
 	      	echo "============= hampi-utilities installed =============="
+	     		REBOOT="YES"
 			fi
      		rm -rf hampi-utilities/
       	;;
@@ -557,6 +560,7 @@ EOF
       		sudo cp autohotspot/autohotspot.desktop /usr/local/share/applications/
       		[ -f $HOME/.local/share/applications/autohotspot.desktop ] && rm -f $HOME/.local/share/applications/autohotspot.desktop
 	      	echo "============= autohotspot installed =============="
+	     		REBOOT="YES"
 			fi
       	rm -rf autohotspot/
       	;;
@@ -575,6 +579,7 @@ EOF
       		sudo cp hampi-backup-restore/hampi-backup-restore.desktop /usr/local/share/applications/
       		[ -f $HOME/.local/share/applications/hampi-backup-restore.desktop ] && rm -f $HOME/.local/share/applications/hampi-backup-restore.desktop
 	      	echo "============= hampi-backup-restore installed =============="
+	     		REBOOT="YES"
 			fi
       	rm -rf hampi-backup-restore/
       	;;
@@ -674,5 +679,6 @@ EOF
          ;;
    esac
 done
+[[ $REBOOT == "YES" ]] && exit 2 || exit 0
 
 
