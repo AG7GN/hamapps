@@ -16,7 +16,7 @@
 #
 #=========================================================================================
 
-VERSION="1.65.0"
+VERSION="1.66.0"
 
 GITHUB_URL="https://github.com"
 HAMLIB_LATEST_URL="$GITHUB_URL/Hamlib/Hamlib/releases/latest"
@@ -192,7 +192,7 @@ then
    exit 1
 fi
 sudo apt-get --fix-broken -y install || aptError "sudo apt-get --fix-broken -y install"
-sudo apt-get install -y extra-xdg-menus bc || aptError "sudo apt-get install -y extra-xdg-menus bc"
+sudo apt-get install -y extra-xdg-menus bc dnsutils libgtk-3-bin || aptError "sudo apt-get install -y extra-xdg-menus bc"
 
 APPS="$(echo "${2,,}" | tr ',' '\n' | sort -u | xargs)" 
 

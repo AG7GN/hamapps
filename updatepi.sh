@@ -3,7 +3,7 @@
 # YAD/shell script to install or update certain ham applications, as well as 
 # update Raspbian OS and apps.
 
-VERSION="1.65.0"
+VERSION="1.66.0"
 
 if ! command -v hamapps.sh 1>/dev/null 2>&1
 then
