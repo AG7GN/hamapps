@@ -16,7 +16,7 @@
 #
 #=========================================================================================
 
-VERSION="1.66.0"
+VERSION="1.67.1"
 
 GITHUB_URL="https://github.com"
 HAMLIB_LATEST_URL="$GITHUB_URL/Hamlib/Hamlib/releases/latest"
@@ -371,7 +371,7 @@ EOF
 			wget -q -O dev.zip $DIREWOLF_LATEST || { echo >&2 "======= $DIREWOLF_LATEST_VER download failed with $? ========"; exit 1; }
 			unzip -o dev.zip
 			cd $(ls -td dire* | head -1)
-			LATEST_VER="$(cat version.h | grep -m1 -i version | sed 's/[^0-9.]//g')"
+			LATEST_VER="$(cat src/version.h | grep -m1 -i version | sed 's/[^0-9.]//g')"
 			INSTALLED_VER="$(direwolf --version 2>/dev/null | grep -m1 -i "version" | sed 's/(.*)//g;s/[^0-9.]//g')"
 			[[ $INSTALLED_VER == "" ]] && INSTALLED_VER=0
 		   if ls $HOME/.local/share/applications/direwolf*.desktop 1> /dev/null 2>&1
@@ -496,9 +496,21 @@ EOF
          echo "============= Downloading $PAT_URL ============="
          wget -q -O $PAT_FILE $PAT_URL || { echo >&2 "======= $PAT_URL download failed with $? ========"; exit 1; }
          [ -s "$PAT_FILE" ] || { echo >&2 "======= $PAT_FILE is empty ========"; exit 1; }
-         sudo dpkg -i $PAT_FILE || { echo >&2 "======= pat installation failed with $? ========"; exit 1; }
+			LATEST_VER="$(echo $PAT_FILE | cut -d'_' -f2)"
+			if command -v pat >/dev/null
+			then
+				INSTALLED_VER="$(pat version | cut -d' ' -f2 | tr -d [A-Za-z])"
+			else
+				INSTALLED_VER="NONE"
+			fi
+			if [[ $INSTALLED_VER == $LATEST_VER ]]
+			then
+				echo "============= pat is up to date ============="
+			else
+         	sudo dpkg -i $PAT_FILE || { echo >&2 "======= pat installation failed with $? ========"; exit 1; }
+         	echo "============= pat installed ============="
+			fi
 			rm -f $PAT_FILE
-         echo "============= pat installed ============="
          ;;
       hamapps*)
       	echo "============= hamapps install/update requested ========"
@@ -681,5 +693,3 @@ EOF
    esac
 done
 [[ $REBOOT == "YES" ]] && exit 2 || exit 0
-
-

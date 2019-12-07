@@ -3,14 +3,7 @@
 # YAD/shell script to install or update certain ham applications, as well as 
 # update Raspbian OS and apps.
 
-VERSION="1.66.0"
-
-if ! command -v hamapps.sh 1>/dev/null 2>&1
-then
-   echo "hamapps.sh is not installed.  Exiting."
-   sleep 5
-   exit 1
-fi
+VERSION="1.67.1"
 
 function Help () {
 	BROWSER="$(command -v chromium-browser)"
@@ -39,47 +32,68 @@ function Help () {
 }
 export -f Help
 
+function GenerateTable () {
+	# Takes 1 argument:  The first word of the middle button ("Select" or "Unselect")
+
+	ANS="$(yad --center --title="Update Apps/OS - version $VERSION" --list --borders=10 --height=625 --width=480 --text-align=center \
+	--text "<b>This script will install and/or check for and install updates for the apps you select below.  \
+If there are updates available, it will install them.</b>\n\n \
+For information about or help with an app, double-click the app's name.  \
+This will open the Pi's web browser.\n\n \
+This Pi must be connected to the Internet for this script to work.\n\n \
+<b><span color='red'>CLOSE ALL OTHER APPS</span></b> <u>before</u> you click OK.\n" \
+--separator="," --checklist --grid-lines=hor \
+--dclick-action="bash -c \"Help %s\"" \
+--auto-kill --column Pick --column Applications \
+--column Action < "$TFILE" --buttons-layout=center --button=Cancel:1 --button="$1 All Installed":2 --button=OK:0)"
+}
+
+function GenerateList () {
+	# Takes 1 argument:  0 = Pick boxes for installed apps are not checked, 1 = Pick boxes for installed apps are checked.
+	TFILE="$(mktemp)"
+	declare -a CHECKED
+	CHECKED[0]="FALSE"
+	CHECKED[1]="TRUE"
+	echo -e "${CHECKED[$1]}\nRaspbian OS and Apps\nCheck for Updates" > "$TFILE"
+	for A in fldigi flmsg flamp flrig flwrap direwolf pat arim piardop2 chirp wsjtx xastir hampi-backup-restore.sh hampi-iptables hampi-utilities hamapps autohotspot 710.sh pmon
+	do 
+		case $A in
+			hampi-iptables|autohotspot)
+				echo -e "${CHECKED[$1]}\n$A\nInstalled - Check for Updates" >> "$TFILE" 
+				;;
+			chirp)
+				if command -v chirpw 1>/dev/null 2>&1
+				then
+					echo -e "${CHECKED[$1]}\n$A\nInstalled - Check for Updates" >> "$TFILE" 
+				else
+					echo -e "FALSE\n$A\nNew Install" >> "$TFILE"
+				fi
+				;;
+			hampi-utilities)
+				if [ -s /usr/local/src/hampi/hampi-utilities.version ]
+				then
+					echo -e "${CHECKED[$1]}\n$A\nInstalled - Check for Updates" >> "$TFILE" 
+				else
+					echo -e "FALSE\n$A\nNew Install" >> "$TFILE"
+				fi
+				;;
+			hamapps)
+				echo -e "FALSE\n$A\nUpdated Automatically" >> "$TFILE"
+				;;
+			*)
+		   	if command -v $A 1>/dev/null 2>&1 
+				then
+	   			echo -e "${CHECKED[$1]}\n$A\nInstalled - Check for Updates" >> "$TFILE"
+				else
+					echo -e "FALSE\n$A\nNew Install" >> "$TFILE"
+				fi
+				;;
+		esac
+	done
+}
+
 REBOOT="NO"
-
 APPS=""
-TFILE="$(mktemp)"
-echo -e "FALSE\nRaspbian OS and Apps\nCheck for Updates" > "$TFILE"
-for A in fldigi flmsg flamp flrig flwrap direwolf pat arim piardop2 chirp wsjtx xastir hampi-backup-restore.sh hampi-iptables hampi-utilities hamapps autohotspot 710.sh pmon
-do 
-	case $A in
-		hampi-iptables|autohotspot)
-			echo -e "FALSE\n$A\nCheck for Updates" >> "$TFILE" 
-			;;
-		chirp)
-			if command -v chirpw 1>/dev/null 2>&1
-			then
-					  echo -e "FALSE\n$A\nCheck for Updates" >> "$TFILE" 
-			else
-				echo -e "FALSE\n$A\nNew Install" >> "$TFILE"
-			fi
-			;;
-		hampi-utilities)
-			if [ -s /usr/local/src/hampi/hampi-utilities.version ]
-			then
-				echo -e "FALSE\n$A\nCheck for Updates" >> "$TFILE" 
-			else
-				echo -e "FALSE\n$A\nNew Install" >> "$TFILE"
-			fi
-			;;
-		hamapps)
-			echo -e "FALSE\n$A\nUpdated Automatically" >> "$TFILE"
-			;;
-		*)
-		   if command -v $A 1>/dev/null 2>&1 
-			then
-	   		echo -e "FALSE\n$A\nCheck for Updates" >> "$TFILE"
-			else
-				echo -e "FALSE\n$A\nNew Install" >> "$TFILE"
-			fi
-			;;
-	esac
-done
-
 OSUPDATES=NO
 GITHUB_URL="https://github.com"
 HAMAPPS_GIT_URL="$GITHUB_URL/AG7GN/hamapps"
@@ -111,7 +125,7 @@ else
   	echo "============= updatepi.sh and hamapps.sh have been updated =============="
   	echo
   	yad --center --title="Update Apps/OS - version $VERSION" --info --borders=30 \
-    --no-wrap --text="A new version of this script has been installed.\n\nPlease \
+--no-wrap --text="A new version of this script has been installed.\n\nPlease \
 run <b>Raspberry > Hamradio > Update Pi and Ham Apps</b> again." --buttons-layout=center \
 --button=Close:0
   	exit 0
@@ -136,18 +150,33 @@ then
 	fi
 fi
 
-ANS="$(yad --center --title="Update Apps/OS - version $VERSION" --list --borders=10 --height=625 --width=480 --text-align=center \
-	--text "<b>This script will install and/or check for and install updates for the apps you select below.  \
-If there are updates available, it will install them.</b>\n\n \
-For information about or help with an app, double-click the app's name.  \
-This will open the Pi's web browser.\n\n \
-This Pi must be connected to the Internet for this script to work.\n\n \
-<b><span color='red'>CLOSE ALL OTHER APPS</span></b> <u>before</u> you click OK.\n" \
---separator="," --checklist --grid-lines=hor \
---dclick-action="bash -c \"Help %s\"" \
---auto-kill --column Pick --column Applications \
---column Action < "$TFILE" --buttons-layout=center)"
-
+RESULT=2
+# Initially generate app list with pick boxes for installed apps not checked
+GenerateList 0
+PICKBUTTON="Select"
+until [ $RESULT -ne 2 ]
+do 
+	GenerateTable $PICKBUTTON 
+	RESULT="$?"
+	if [ $RESULT -eq 2 ]
+	then # User clicked "*Select All Installed" button
+		case $PICKBUTTON in
+			Select)
+				# Generate new list with pick box checked for each installed app
+				GenerateList 1
+				# Change button so user can de-select pick box for all installed apps
+				PICKBUTTON="Unselect"
+				;;
+			Unselect)
+				# Generate new list with pick box unchecked for each installed app
+				GenerateList 0
+				# Change button so user can check all installed apps.
+				PICKBUTTON="Select"
+				;;
+		esac
+	fi
+done		
+	
 if [ "$?" -eq "1" ] || [[ $ANS == "" ]]
 then 
    echo "Update Cancelled"
@@ -160,12 +189,12 @@ else
       OSUPDATES=YES
 		ANS="$(echo "$ANS" | grep -v Raspbian)"
    fi
-	UPDATES="$(echo "$ANS" | grep Updates | sed 's/^TRUE,//g;s/,Check .*$//g' | tr '\n' ',' | sed 's/,$//')"
-	INSTALLS="$(echo "$ANS" | grep Install | sed 's/^TRUE,//g;s/,New .*$//g' | tr '\n' ',' | sed 's/,$//')"
+	UPDATES="$(echo "$ANS" | grep Updates | sed -e 's/^TRUE,//g' -e 's/,Check .*$//g' -e 's/,Installed.*$//g' | tr '\n' ',' | sed 's/,$//')"
+	INSTALLS="$(echo "$ANS" | grep "New Install" | sed -e 's/^TRUE,//g' -e 's/,New .*$//g' | tr '\n' ',' | sed 's/,$//')"
    echo
    if [[ $UPDATES != "" ]]
 	then
-      echo "Checking for and installing updates for $UPDATES..."
+      echo "Looking for updates to $UPDATES..."
 		echo
       $(which hamapps.sh) upgrade $UPDATES
       [ $? -eq 2 ] && REBOOT="YES"
@@ -206,5 +235,3 @@ yad --center --title="Update Apps/OS - version $VERSION" --info --borders=30 \
     --no-wrap --text-align=center --text="<b>Finished.</b>\n\n" --buttons-layout=center \
 --button=Close:0
 exit 0
-
-
