@@ -3,7 +3,7 @@
 # YAD/shell script to install or update certain ham applications, as well as 
 # update Raspbian OS and apps.
 
-VERSION="1.67.1"
+VERSION="1.68.1"
 
 function Help () {
 	BROWSER="$(command -v chromium-browser)"
@@ -212,8 +212,8 @@ else
    then
       echo "Checking for regular Raspberry Pi updates..."
 		echo
-      sudo apt-get update
-      sudo apt-get -y upgrade && echo -e "\n\n=========== Raspbian OS Update Finished ==========="
+      sudo apt update
+      sudo apt -y upgrade && echo -e "\n\n=========== Raspbian OS Update Finished ==========="
    fi
 fi
 

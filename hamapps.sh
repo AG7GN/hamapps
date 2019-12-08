@@ -16,7 +16,7 @@
 #
 #=========================================================================================
 
-VERSION="1.67.1"
+VERSION="1.68.1"
 
 GITHUB_URL="https://github.com"
 HAMLIB_LATEST_URL="$GITHUB_URL/Hamlib/Hamlib/releases/latest"
@@ -102,8 +102,8 @@ function installHamlib () {
    #HAMLIB_DIR="$(echo $HAMLIB_FILE | sed 's/.tar.gz//')"
    #cd $HAMLIB_DIR
 	#echo "=========== Installing/upgrading Hamlib (rigctl) ==========="
-	##sudo apt-get remove libhamlib2 -y
-	#sudo apt-get install texinfo -y
+	##sudo apt remove libhamlib2 -y
+	#sudo apt install texinfo -y
    #if ./configure && make -j4 && sudo make install && sudo ldconfig
    #then
    #   cd $HOME
@@ -116,7 +116,7 @@ function installHamlib () {
    #   cd $HOME
    #   exit 1
    #fi
-	sudo apt-get -y install libhamlib2 libhamlib-dev 
+	sudo apt -y install libhamlib2 libhamlib-dev 
 	return $?
 }
 
@@ -180,19 +180,19 @@ esac
 [[ $2 == "" ]] && Usage
 
 which wget >/dev/null || { echo >&2 "This script requires wget."; Usage; }
-sudo apt-get update
+sudo apt update
 if [[ $? != 0 ]]
 then
    echo
    echo
    echo
-   echo >&2 "ERROR updating package list while running 'sudo apt-get update'."
+   echo >&2 "ERROR updating package list while running 'sudo apt update'."
    echo
    echo >&2 "This is likely problem with a repository somewhere on the Internet.  Run this script again to retry."
    exit 1
 fi
 sudo apt-get --fix-broken -y install || aptError "sudo apt-get --fix-broken -y install"
-sudo apt-get install -y extra-xdg-menus bc dnsutils libgtk-3-bin || aptError "sudo apt-get install -y extra-xdg-menus bc"
+sudo apt install -y extra-xdg-menus bc dnsutils libgtk-3-bin || aptError "sudo apt install -y extra-xdg-menus bc"
 
 APPS="$(echo "${2,,}" | tr ',' '\n' | sort -u | xargs)" 
 
@@ -238,10 +238,10 @@ do
                   #sed 's/; autospawn = yes/autospawn = no/' < /etc/pulse/client.conf  > $HOME/.config/pulse/client.conf
                   sudo sed -i 's/^#deb-src/deb-src/' /etc/apt/sources.list
                   sudo sed -i 's/^#deb-src/deb-src/' /etc/apt/sources.list.d/raspi.list
-						sudo apt-get update || aptError "sudo apt-get update"
+						sudo apt update || aptError "sudo apt update"
                   sudo apt-get build-dep -y fldigi || aptError "sudo apt-get build-dep -y fldigi"
-                  sudo apt-get install -y synaptic pavucontrol libusb-1.0-0-dev libusb-1.0-doc || aptError "sudo apt-get install -y synaptic pavucontrol libusb-1.0-0-dev libusb-1.0-doc"
-                  sudo apt-get autoremove -y || aptError "sudo apt-get autoremove -y"
+                  sudo apt install -y synaptic pavucontrol libusb-1.0-0-dev libusb-1.0-doc || aptError "sudo apt install -y synaptic pavucontrol libusb-1.0-0-dev libusb-1.0-doc"
+                  sudo apt autoremove -y || aptError "sudo apt autoremove -y"
                   installHamlib
                   FLDIGI_DEPS_INSTALLED=1
                fi
@@ -298,8 +298,8 @@ do
 					mkdir -p $HOME/maps
 					cp -r /usr/share/xastir/maps/* $HOME/maps
 				fi
-				sudo apt-get remove -y xastir
-				sudo apt-get -y autoremove
+				sudo apt -y remove xastir
+				sudo apt -y autoremove
 				if [ -d $HOME/maps ]
 				then
 					sudo cp -r $HOME/maps/* /usr/local/share/xastir/maps
@@ -308,11 +308,11 @@ do
 				echo "Done."
 			fi
 			echo "Building $APP from source"
-         sudo apt-get install -y build-essential || aptError "sudo apt-get install -y build-essential"
-         sudo apt-get install -y git autoconf automake xorg-dev graphicsmagick gv libmotif-dev libcurl4-openssl-dev || aptError "sudo apt-get install -y git autoconf automake xorg-dev graphicsmagick gv libmotif-dev libcurl4-openssl-dev"
-         sudo apt-get install -y gpsman gpsmanshp libpcre3-dev libproj-dev libdb5.3-dev python-dev libwebp-dev || aptError "sudo apt-get install -y gpsman gpsmanshp libpcre3-dev libproj-dev libdb5.3-dev python-dev libwebp-dev"
-         sudo apt-get install -y shapelib libshp-dev festival festival-dev libgeotiff-dev libgraphicsmagick1-dev || aptError "sudo apt-get install -y shapelib libshp-dev festival festival-dev libgeotiff-dev libgraphicsmagick1-dev"
-         sudo apt-get install -y xfonts-100dpi xfonts-75dpi || aptError "sudo apt-get install -y xfonts-100dpi xfonts-75dpi"
+         sudo apt install -y build-essential || aptError "sudo apt install -y build-essential"
+         sudo apt install -y git autoconf automake xorg-dev graphicsmagick gv libmotif-dev libcurl4-openssl-dev || aptError "sudo apt install -y git autoconf automake xorg-dev graphicsmagick gv libmotif-dev libcurl4-openssl-dev"
+         sudo apt install -y gpsman gpsmanshp libpcre3-dev libproj-dev libdb5.3-dev python-dev libwebp-dev || aptError "sudo apt install -y gpsman gpsmanshp libpcre3-dev libproj-dev libdb5.3-dev python-dev libwebp-dev"
+         sudo apt install -y shapelib libshp-dev festival festival-dev libgeotiff-dev libgraphicsmagick1-dev || aptError "sudo apt install -y shapelib libshp-dev festival festival-dev libgeotiff-dev libgraphicsmagick1-dev"
+         sudo apt install -y xfonts-100dpi xfonts-75dpi || aptError "sudo apt install -y xfonts-100dpi xfonts-75dpi"
 			xset +fp /usr/share/fonts/X11/100dpi,/usr/share/fonts/X11/75dpi
          cd $HOME
          if [ -d $HOME/src/Xastir ] 
@@ -359,7 +359,7 @@ EOF
       rigctl)
          echo "=========== Installing $APP ==========="
 			installHamlib && echo >&2 "=========== $APP installation complete ==========" || { echo >&2 ">>>   Error installing  $APP."; exit 1; }
-			sudo apt-get -y install libhamlib-utils
+			sudo apt -y install libhamlib-utils
 			;;	
       direwolf)
          cd $HOME
@@ -392,7 +392,7 @@ EOF
             #mkdir -p $HOME/src
             #cd $HOME/src
 				#wget -q -O ${DIREWOLF_LATEST_VER##*/} $DIREWOLF_LATEST_VER || { echo >&2 "======= $DIREWOLF_LATEST_VER download failed with $? ========"; exit 1; }
-         	sudo apt-get install -y cmake build-essential libusb-1.0-0-dev libasound2-dev pavucontrol screen gpsd libgps-dev || aptError "sudo apt-get install -y cmake build-essential libusb-1.0-0-dev libasound2-dev pavucontrol screen gpsd libgps-dev"
+         	sudo apt install -y cmake build-essential libusb-1.0-0-dev libasound2-dev pavucontrol screen gpsd libgps-dev || aptError "sudo apt install -y cmake build-essential libusb-1.0-0-dev libasound2-dev pavucontrol screen gpsd libgps-dev"
             installHamlib 
 				#tar zxvf ${DIREWOLF_LATEST_VER##*/}
 				#cd $(ls -td dire* | head -1)
@@ -650,7 +650,7 @@ EOF
          	echo "============= Downloading $CHIRP_URL ============="
          	wget -q -O $CHIRP_TAR_FILE $CHIRP_URL || { echo >&2 "======= $CHIRP_URL download failed with $? ========"; exit 1; }
          	[ -s "$CHIRP_TAR_FILE" ] || { echo >&2 "======= $CHIRP_TAR_FILE is empty ========"; exit 1; }
-         	sudo apt-get install -y python-gtk2 python-serial python-libxml2 python-future || aptError "sudo apt-get install -y python-gtk2 python-serial python-libxml2 python-future"
+         	sudo apt install -y python-gtk2 python-serial python-libxml2 python-future || aptError "sudo apt install -y python-gtk2 python-serial python-libxml2 python-future"
          	tar xzf $CHIRP_TAR_FILE
          	CHIRP_DIR="$(echo $CHIRP_TAR_FILE | sed 's/.tar.gz//')"
          	cd $CHIRP_DIR
