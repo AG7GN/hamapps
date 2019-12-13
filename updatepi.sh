@@ -3,7 +3,7 @@
 # YAD/shell script to install or update certain ham applications, as well as 
 # update Raspbian OS and apps.
 
-VERSION="1.68.1"
+VERSION="1.69.1"
 
 function Help () {
 	BROWSER="$(command -v chromium-browser)"
@@ -214,6 +214,9 @@ else
 		echo
       sudo apt update
       sudo apt -y upgrade && echo -e "\n\n=========== Raspbian OS Update Finished ==========="
+      # Make sure pulseaudio is not default sound card.  If pulseaudio is updated,
+      # it might restore this file and make pulseaudio the default sound interface.
+      sudo sed -i -e '/^[^#]/ s/^#*/#/' /usr/share/alsa/pulse-alsa.conf
    fi
 fi
 
