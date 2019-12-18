@@ -16,7 +16,7 @@
 #
 #=========================================================================================
 
-VERSION="1.69.1"
+VERSION="1.70.0"
 
 GITHUB_URL="https://github.com"
 HAMLIB_LATEST_URL="$GITHUB_URL/Hamlib/Hamlib/releases/latest"
@@ -548,6 +548,7 @@ EOF
 			else
       		cp -f hampi-utilities/hampi-utilities.version /usr/local/src/hampi/
       		cp -f hampi-utilities/*.conf /usr/local/src/hampi/
+      		cp -f hampi-utilities/*.jpg $HOME/Pictures/
       		cp -f hampi-utilities/*.example $HOME/
       		sudo cp -f hampi-utilities/*.sh /usr/local/bin/
       		sudo cp -f hampi-utilities/*.py /usr/local/bin/
