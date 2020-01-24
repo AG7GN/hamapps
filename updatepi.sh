@@ -3,7 +3,7 @@
 # YAD/shell script to install or update certain ham applications, as well as 
 # update Raspbian OS and apps.
 
-VERSION="1.71.3"
+VERSION="1.72.1"
 
 function Help () {
 	BROWSER="$(command -v chromium-browser)"
@@ -56,7 +56,7 @@ function GenerateList () {
 	CHECKED[0]="FALSE"
 	CHECKED[1]="TRUE"
 	echo -e "${CHECKED[$1]}\nRaspbian OS and Apps\nCheck for Updates" > "$TFILE"
-	for A in fldigi flmsg flamp flrig flwrap direwolf pat arim piardop2 chirp wsjtx xastir hampi-backup-restore.sh hampi-iptables hampi-utilities hamapps autohotspot 710.sh pmon hampi-rmsgw
+	for A in 710.sh arim autohotspot chirp direwolf fldigi flmsg flamp flrig flwrap hamapps hampi-backup-restore.sh hampi-iptables hampi-utilities hampi-rmsgw pat piardop2 pmon wsjtx xastir 
 	do 
 		case $A in
 			hampi-iptables|autohotspot)
