@@ -23,7 +23,7 @@ Alternatively, you can install these scripts manually as follows:
 - Open a terminal and run:
 
 		cd ~
-		rm -rf hamapps 
+		rm -rf hamapps/
 		git clone https://github.com/AG7GN/hamapps  
 		sudo cp hamapps/*.sh /usr/local/bin
 		sudo cp hamapps/*.desktop /usr/local/share/applications/

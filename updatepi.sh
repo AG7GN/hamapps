@@ -3,7 +3,7 @@
 # YAD/shell script to install or update certain ham applications, as well as 
 # update Raspbian OS and apps.
 
-VERSION="1.70.0"
+VERSION="1.71.3"
 
 function Help () {
 	BROWSER="$(command -v chromium-browser)"
@@ -27,6 +27,7 @@ function Help () {
 	APPS[autohotspot]="https://github.com/AG7GN/autohotspot/blob/master/README.md"
 	APPS[710.sh]="https://github.com/AG7GN/kenwood/blob/master/README.md"
 	APPS[pmon]="https://www.p4dragon.com/en/PMON.html"
+	APPS[hampi-rmsgw]="https://github.com/AG7GN/rmsgw/blob/master/README.md"
 	APP="$2"
 	$BROWSER ${APPS[$APP]} &
 }
@@ -55,7 +56,7 @@ function GenerateList () {
 	CHECKED[0]="FALSE"
 	CHECKED[1]="TRUE"
 	echo -e "${CHECKED[$1]}\nRaspbian OS and Apps\nCheck for Updates" > "$TFILE"
-	for A in fldigi flmsg flamp flrig flwrap direwolf pat arim piardop2 chirp wsjtx xastir hampi-backup-restore.sh hampi-iptables hampi-utilities hamapps autohotspot 710.sh pmon
+	for A in fldigi flmsg flamp flrig flwrap direwolf pat arim piardop2 chirp wsjtx xastir hampi-backup-restore.sh hampi-iptables hampi-utilities hamapps autohotspot 710.sh pmon hampi-rmsgw
 	do 
 		case $A in
 			hampi-iptables|autohotspot)
@@ -71,6 +72,14 @@ function GenerateList () {
 				;;
 			hampi-utilities)
 				if [ -s /usr/local/src/hampi/hampi-utilities.version ]
+				then
+					echo -e "${CHECKED[$1]}\n$A\nInstalled - Check for Updates" >> "$TFILE" 
+				else
+					echo -e "FALSE\n$A\nNew Install" >> "$TFILE"
+				fi
+				;;
+			hampi-rmsgw)
+				if [ -s /usr/local/src/hampi/hampi-rmsgw.version ]
 				then
 					echo -e "${CHECKED[$1]}\n$A\nInstalled - Check for Updates" >> "$TFILE" 
 				else

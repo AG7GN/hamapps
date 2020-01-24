@@ -16,7 +16,7 @@
 #
 #=========================================================================================
 
-VERSION="1.70.0"
+VERSION="1.71.3"
 
 GITHUB_URL="https://github.com"
 HAMLIB_LATEST_URL="$GITHUB_URL/Hamlib/Hamlib/releases/latest"
@@ -41,6 +41,7 @@ KENWOOD_GIT_URL="$GITHUB_URL/AG7GN/kenwood"
 HAMPI_BU_RS_GIT_URL="$GITHUB_URL/AG7GN/hampi-backup-restore"
 PMON_REPO="https://www.scs-ptc.com/repo/packages/"
 PMON_GIT_URL="$GITHUB_URL/AG7GN/pmon"
+HAMPIRMSGW_GIT_URL="$GITHUB_URL/AG7GN/rmsgw"
 
 REBOOT="NO"
 
@@ -531,21 +532,24 @@ EOF
       	rm -rf hamapps/
       	;;
       hampi-utilities)
-      	echo "============= hampi-utilities install/update requested ========"
-      	cd $HOME
-      	[ -d "$HOME/hampi-utilities" ] && rm -rf hamp-utilities/
-      	git clone $HAMPIUTILS_GIT_URL || { echo >&2 "======= git clone $HAMPIUTILS_GIT_URL failed ========"; exit 1; }
+      	echo "========= hampi-utilities install/update requested ========"
+ 			VERSION_FILE_URL="https://raw.githubusercontent.com/AG7GN/hampi-utilities/master/hampi-utilities.version"
+      	wget -qO /tmp/hampi-utilities.version $VERSION_FILE_URL || { echo >&2 "======= $VERSION_FILE_URL download failed with $? ========"; exit 1; }
       	if [ -s /usr/local/src/hampi/hampi-utilities.version ]
 			then
 				INSTALLED_VER="$(grep -i "^VERSION" /usr/local/src/hampi/hampi-utilities.version)"
 			else
 			   INSTALLED_VER="NONE"
 			fi
-			LATEST_VER="$(grep -i "^VERSION" hampi-utilities/hampi-utilities.version)"
+			LATEST_VER="$(grep -i "^VERSION" /tmp/hampi-utilities.version)"
+			echo "INSTALLED: $INSTALLED_VER   LATEST: $LATEST_VER"
 			if [[ $INSTALLED_VER == $LATEST_VER ]]
 			then
 				echo "============= hampi-utilities are up to date ============="
 			else
+      		[ -d "/usr/local/src/hampi/hampi-utilities" ] && rm -rf hamp-utilities/
+				cd /usr/local/src/hampi
+      		git clone $HAMPIUTILS_GIT_URL || { echo >&2 "======= git clone $HAMPIUTILS_GIT_URL failed ========"; exit 1; }
       		cp -f hampi-utilities/hampi-utilities.version /usr/local/src/hampi/
       		cp -f hampi-utilities/*.conf /usr/local/src/hampi/
       		cp -f hampi-utilities/*.jpg $HOME/Pictures/
@@ -554,10 +558,11 @@ EOF
       		sudo cp -f hampi-utilities/*.py /usr/local/bin/
       		sudo cp -f hampi-utilities/*.desktop /usr/local/share/applications/
       		sudo cp -f hampi-utilities/*.template /usr/local/share/applications/
+	     		rm -rf hampi-utilities/
 	      	echo "============= hampi-utilities installed =============="
 	     		REBOOT="YES"
 			fi
-     		rm -rf hampi-utilities/
+     		rm -f /tmp/hampi-utilities.version
       	;;
       autohotspot)
       	echo "============= autohotspot install/update requested ========"
@@ -687,6 +692,32 @@ EOF
       		echo "============= pmon and scripts installed ================="
       	fi
      		rm -rf pmon/
+     		;;
+     	hampi-rmsgw)
+      	echo "============= hampi-rmsgw install/update requested ========"
+			VERSION_FILE_URL="https://raw.githubusercontent.com/AG7GN/rmsgw/master/hampi-rmsgw.version"
+      	wget -qO /tmp/hampi-rmsgw.version $VERSION_FILE_URL || { echo >&2 "======= $VERSION_FILE_URL download failed with $? ========"; exit 1; }
+      	if [ -s /usr/local/src/hampi/hampi-rmsgw.version ]
+			then
+				INSTALLED_VER="$(grep -i "^VERSION" /usr/local/src/hampi/hampi-rmsgw.version)"
+			else
+			   INSTALLED_VER="NONE"
+			fi
+			LATEST_VER="$(grep -i "^VERSION" /tmp/hampi-rmsgw.version)"
+			echo "INSTALLED: $INSTALLED_VER   LATEST: $LATEST_VER"
+			if [[ $INSTALLED_VER == $LATEST_VER ]]
+			then
+				echo "============= hampi-rmsgw is up to date ============="
+			else
+				cd /usr/local/src/hampi
+	      	[ -d "/usr/local/src/hampi/rmsgw" ] && rm -rf rmsgw/
+				git clone $HAMPIRMSGW_GIT_URL || { echo >&2 "======= git clone $HAMPIRMSGW_GIT_URL failed ========"; exit 1; }
+				cd rmsgw
+				./install-rmsgw.sh
+				cp -f hampi-rmsgw.version ../
+	      	echo "============= hampi-utilities installed =============="
+			fi
+			rm -f /tmp/hampi-rmsgw.version
      		;;
       *)
          echo "Skipping unknown app \"$APP\"."
