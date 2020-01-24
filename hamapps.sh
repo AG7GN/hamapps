@@ -16,7 +16,7 @@
 #
 #=========================================================================================
 
-VERSION="1.72.1"
+VERSION="1.72.2"
 
 GITHUB_URL="https://github.com"
 HAMLIB_LATEST_URL="$GITHUB_URL/Hamlib/Hamlib/releases/latest"
@@ -714,7 +714,7 @@ EOF
 				git clone $HAMPIRMSGW_GIT_URL || { echo >&2 "======= git clone $HAMPIRMSGW_GIT_URL failed ========"; exit 1; }
 				cd rmsgw
 				./install-rmsgw.sh
-				cp -f hampi-rmsgw.version ../
+				cp -f hampi-rmsgw.version /usr/local/src/hampi/
 	      	echo "============= hampi-utilities installed =============="
 			fi
 			rm -f /tmp/hampi-rmsgw.version
