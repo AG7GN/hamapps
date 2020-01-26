@@ -3,7 +3,7 @@
 # YAD/shell script to install or update certain ham applications, as well as 
 # update Raspbian OS and apps.
 
-VERSION="1.73.4"
+VERSION="1.73.5"
 
 function Help () {
 	BROWSER="$(command -v chromium-browser)"
@@ -58,7 +58,7 @@ function GenerateList () {
 	CHECKED[1]="TRUE"
 	LIST="710.sh arim autohotspot chirp direwolf flamp fldigi flmsg flrig flwrap hamapps hampi-backup-restore.sh hampi-iptables hampi-rmsgw hampi-utilities pat piardop2 pmon wsjtx xastir"
 	declare -A DESC
-	DESC[710.sh]="Kenwood Rig Control Script for 710/71A"
+	DESC[710.sh]="Rig Control Script for Kenwood 710/71A"
 	DESC[arim]="Amateur Radio Instant Messaging"
 	DESC[autohotspot]="Wireless HotSpot on your Pi"
 	DESC[chirp]="Radio Programming Tool"
