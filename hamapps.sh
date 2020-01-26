@@ -16,7 +16,7 @@
 #
 #=========================================================================================
 
-VERSION="1.72.2"
+VERSION="1.73.2"
 
 GITHUB_URL="https://github.com"
 HAMLIB_LATEST_URL="$GITHUB_URL/Hamlib/Hamlib/releases/latest"

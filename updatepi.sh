@@ -3,7 +3,7 @@
 # YAD/shell script to install or update certain ham applications, as well as 
 # update Raspbian OS and apps.
 
-VERSION="1.72.2"
+VERSION="1.73.3"
 
 function Help () {
 	BROWSER="$(command -v chromium-browser)"
@@ -29,24 +29,25 @@ function Help () {
 	APPS[pmon]="https://www.p4dragon.com/en/PMON.html"
 	APPS[hampi-rmsgw]="https://github.com/AG7GN/rmsgw/blob/master/README.md"
 	APP="$2"
-	$BROWSER ${APPS[$APP]} &
+	$BROWSER ${APPS[$APP]} 2>/dev/null &
 }
 export -f Help
 
 function GenerateTable () {
 	# Takes 1 argument:  The first word of the middle button ("Select" or "Unselect")
 
-	ANS="$(yad --center --title="Update Apps/OS - version $VERSION" --list --borders=10 --height=625 --width=480 --text-align=center \
-	--text "<b>This script will install and/or check for and install updates for the apps you select below.  \
+	ANS="$(yad --center --title="Update Apps/OS - version $VERSION" --list --borders=10 --height=600 --width=820 --text-align=center \
+	--text "<b>This script will install and/or check for and install updates for the apps you select below.\n \
 If there are updates available, it will install them.</b>\n\n \
-For information about or help with an app, double-click the app's name.  \
-This will open the Pi's web browser.\n\n \
+<b><span color='blue'>For information about or help with an app, double-click the app's name.</span></b>\n \
+This will open the Pi's web browser.\n \
 This Pi must be connected to the Internet for this script to work.\n\n \
 <b><span color='red'>CLOSE ALL OTHER APPS</span></b> <u>before</u> you click OK.\n" \
 --separator="," --checklist --grid-lines=hor \
 --dclick-action="bash -c \"Help %s\"" \
---auto-kill --column Pick --column Applications \
+--auto-kill --column Pick --column Applications --column Description \
 --column Action < "$TFILE" --buttons-layout=center --button=Cancel:1 --button="$1 All Installed":2 --button=OK:0)"
+	rm -f "$TFILE"
 }
 
 function GenerateList () {
@@ -55,25 +56,48 @@ function GenerateList () {
 	declare -a CHECKED
 	CHECKED[0]="FALSE"
 	CHECKED[1]="TRUE"
-	echo -e "${CHECKED[$1]}\nRaspbian OS and Apps\nCheck for Updates" > "$TFILE"
-	for A in 710.sh arim autohotspot chirp direwolf fldigi flmsg flamp flrig flwrap hamapps hampi-backup-restore.sh hampi-iptables hampi-utilities hampi-rmsgw pat piardop2 pmon wsjtx xastir 
+	LIST="710.sh arim autohotspot chirp direwolf flamp fldigi flmsg flrig flwrap hamapps hampi-backup-restore.sh hampi-iptables hampi-rmsgw hampi-utilities pat piardop2 pmon wsjtx xastir"
+	declare -A DESC
+	DESC[710.sh]="Kenwood Rig Control Script for 710/71A"
+	DESC[arim]="Amateur Radio Instant Messaging"
+	DESC[autohotspot]="Wireless HotSpot on your Pi"
+	DESC[chirp]="Radio Programming Tool"
+	DESC[direwolf]="Packet Modem/TNC and APRS Encoder/Decoder"
+	DESC[flamp]="Amateur Multicast Protocol tool for Fldigi"
+	DESC[fldigi]="Fast Light DIGItal Modem"
+	DESC[flmsg]="Forms Manager for Fldigi"
+	DESC[flrig]="Rig Control for Fldigi"
+	DESC[flwrap]="File Encapsulation for Fldigi"
+	DESC[hamapps]="Tool for Installing/Updating Apps"
+	DESC[hampi-backup-restore.sh]="Backup/Restore Home Folder"
+	DESC[hampi-iptables]="Firewall Rules for Hampi Image"
+	DESC[hampi-rmsgw]="RMS Gateway software for the Hampi Image"
+	DESC[hampi-utilities]="Scripts and Apps for Hampi Image"
+	DESC[pat]="Winlink Email Client"
+	DESC[piardop2]="Amateur Radio Digital Open Protocol Modem"
+	DESC[pmon]="PACTOR Monitoring Utility"
+	DESC[wsjtx]="Weak Signal Modes Modem"
+	DESC[xastir]="APRS Tracking and Mapping Utility"
+	
+	echo -e "${CHECKED[$1]}\nRaspbian OS and Apps\nInstall or Update Raspbian OS\nCheck for Updates" > "$TFILE"
+	for A in $LIST 
 	do 
 		case $A in
 			hampi-iptables|autohotspot)
-				echo -e "${CHECKED[$1]}\n$A\nInstalled - Check for Updates" >> "$TFILE" 
+				echo -e "${CHECKED[$1]}\n$A\n${DESC[$A]}\nInstalled - Check for Updates" >> "$TFILE" 
 				;;
 			chirp)
 				if command -v chirpw 1>/dev/null 2>&1
 				then
-					echo -e "${CHECKED[$1]}\n$A\nInstalled - Check for Updates" >> "$TFILE" 
+					echo -e "${CHECKED[$1]}\n$A\n${DESC[$A]}\nInstalled - Check for Updates" >> "$TFILE" 
 				else
-					echo -e "FALSE\n$A\nNew Install" >> "$TFILE"
+					echo -e "FALSE\n$A\n${DESC[$A]}\nNew Install" >> "$TFILE"
 				fi
 				;;
 			hampi-utilities)
 				if [ -s /usr/local/src/hampi/hampi-utilities.version ]
 				then
-					echo -e "${CHECKED[$1]}\n$A\nInstalled - Check for Updates" >> "$TFILE" 
+					echo -e "${CHECKED[$1]}\n$A\n${DESC[$A]}\nInstalled - Check for Updates" >> "$TFILE" 
 				else
 					echo -e "FALSE\n$A\nNew Install" >> "$TFILE"
 				fi
@@ -81,20 +105,20 @@ function GenerateList () {
 			hampi-rmsgw)
 				if [ -s /usr/local/src/hampi/hampi-rmsgw.version ]
 				then
-					echo -e "${CHECKED[$1]}\n$A\nInstalled - Check for Updates" >> "$TFILE" 
+					echo -e "${CHECKED[$1]}\n$A\n${DESC[$A]}\nInstalled - Check for Updates" >> "$TFILE" 
 				else
-					echo -e "FALSE\n$A\nNew Install" >> "$TFILE"
+					echo -e "FALSE\n$A\n${DESC[$A]}\nNew Install" >> "$TFILE"
 				fi
 				;;
 			hamapps)
-				echo -e "FALSE\n$A\nUpdated Automatically" >> "$TFILE"
+				echo -e "FALSE\n$A\n${DESC[$A]}\nUpdated Automatically" >> "$TFILE"
 				;;
 			*)
 		   	if command -v $A 1>/dev/null 2>&1 
 				then
-	   			echo -e "${CHECKED[$1]}\n$A\nInstalled - Check for Updates" >> "$TFILE"
+	   			echo -e "${CHECKED[$1]}\n$A\n${DESC[$A]}\nInstalled - Check for Updates" >> "$TFILE"
 				else
-					echo -e "FALSE\n$A\nNew Install" >> "$TFILE"
+					echo -e "FALSE\n$A\n${DESC[$A]}\nNew Install" >> "$TFILE"
 				fi
 				;;
 		esac
@@ -186,20 +210,18 @@ do
 	fi
 done		
 	
-if [ "$?" -eq "1" ] || [[ $ANS == "" ]]
+if [ $RESULT -eq "1" ] || [[ $ANS == "" ]]
 then 
    echo "Update Cancelled"
-	rm "$TFILE"
    exit 0
 else
-	rm "$TFILE"
    if [[ $ANS =~ Raspbian ]]
    then
       OSUPDATES=YES
 		ANS="$(echo "$ANS" | grep -v Raspbian)"
    fi
-	UPDATES="$(echo "$ANS" | grep Updates | sed -e 's/^TRUE,//g' -e 's/,Check .*$//g' -e 's/,Installed.*$//g' | tr '\n' ',' | sed 's/,$//')"
-	INSTALLS="$(echo "$ANS" | grep "New Install" | sed -e 's/^TRUE,//g' -e 's/,New .*$//g' | tr '\n' ',' | sed 's/,$//')"
+	UPDATES="$(echo "$ANS" | grep Updates | sed -e 's/^TRUE,//g' -e 's/,Check .*$//g' -e 's/,Installed.*$//g' | tr '\n' ',' | sed 's/,$//' | cut -d, -f1)"
+	INSTALLS="$(echo "$ANS" | grep "New Install" | sed -e 's/^TRUE,//g' -e 's/,New .*$//g' | tr '\n' ',' | sed 's/,$//' | cut -d, -f1)"
    echo
    if [[ $UPDATES != "" ]]
 	then
@@ -219,7 +241,7 @@ else
    echo
    if [[ $OSUPDATES == "YES" ]]
    then
-      echo "Checking for regular Raspberry Pi updates..."
+      echo "Checking for regular Raspberry Pi OS updates..."
 		echo
       sudo apt update
       sudo apt -y upgrade && echo -e "\n\n=========== Raspbian OS Update Finished ==========="
