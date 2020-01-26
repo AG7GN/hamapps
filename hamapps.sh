@@ -16,7 +16,7 @@
 #
 #=========================================================================================
 
-VERSION="1.73.7"
+VERSION="1.73.8"
 
 GITHUB_URL="https://github.com"
 HAMLIB_LATEST_URL="$GITHUB_URL/Hamlib/Hamlib/releases/latest"
@@ -355,7 +355,6 @@ EOF
             exit 1
          fi
          cd $HOME
-         echo "========= $APP installation complete ==========="
          ;;
       rigctl)
          echo "=========== Installing $APP ==========="
