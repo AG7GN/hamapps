@@ -3,7 +3,7 @@
 # YAD/shell script to install or update certain ham applications, as well as 
 # update Raspbian OS and apps.
 
-VERSION="1.73.3"
+VERSION="1.73.4"
 
 function Help () {
 	BROWSER="$(command -v chromium-browser)"
@@ -79,7 +79,7 @@ function GenerateList () {
 	DESC[wsjtx]="Weak Signal Modes Modem"
 	DESC[xastir]="APRS Tracking and Mapping Utility"
 	
-	echo -e "${CHECKED[$1]}\nRaspbian OS and Apps\nInstall or Update Raspbian OS\nCheck for Updates" > "$TFILE"
+	echo -e "${CHECKED[$1]}\nRaspbian OS and Apps\nUpdate Raspbian OS and Apps\nCheck for Updates" > "$TFILE"
 	for A in $LIST 
 	do 
 		case $A in
