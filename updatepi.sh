@@ -3,7 +3,7 @@
 # YAD/shell script to install or update certain ham applications, as well as 
 # update Raspbian OS and apps.
 
-VERSION="1.73.6"
+VERSION="1.73.7"
 
 function Help () {
 	BROWSER="$(command -v chromium-browser)"
@@ -47,7 +47,6 @@ This Pi must be connected to the Internet for this script to work.\n\n \
 --dclick-action="bash -c \"Help %s\"" \
 --auto-kill --column Pick --column Applications --column Description \
 --column Action < "$TFILE" --buttons-layout=center --button=Cancel:1 --button="$1 All Installed":2 --button=OK:0)"
-	rm -f "$TFILE"
 }
 
 function GenerateList () {
@@ -209,7 +208,8 @@ do
 		esac
 	fi
 done		
-	
+
+rm -f "$TFILE"
 if [ $RESULT -eq "1" ] || [[ $ANS == "" ]]
 then 
    echo "Update Cancelled"
