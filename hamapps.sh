@@ -16,7 +16,7 @@
 #
 #=========================================================================================
 
-VERSION="1.73.9"
+VERSION="1.73.10"
 
 GITHUB_URL="https://github.com"
 HAMLIB_LATEST_URL="$GITHUB_URL/Hamlib/Hamlib/releases/latest"
@@ -549,8 +549,8 @@ EOF
       		[ -d "/usr/local/src/hampi/hampi-utilities" ] && rm -rf hamp-utilities/
 				cd /usr/local/src/hampi
       		git clone $HAMPIUTILS_GIT_URL || { echo >&2 "======= git clone $HAMPIUTILS_GIT_URL failed ========"; exit 1; }
+      		sudo chown pi:pi hampi-utilities/*
       		chmod +x hampi-utilities/*.sh
-      		chown pi:pi hampi-utilities/*
       		cp -f hampi-utilities/hampi-utilities.version /usr/local/src/hampi/
       		cp -f hampi-utilities/*.conf /usr/local/src/hampi/
       		cp -f hampi-utilities/*.jpg $HOME/Pictures/
