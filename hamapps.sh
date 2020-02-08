@@ -16,7 +16,7 @@
 #
 #=========================================================================================
 
-VERSION="1.73.10"
+VERSION="1.73.11"
 
 GITHUB_URL="https://github.com"
 HAMLIB_LATEST_URL="$GITHUB_URL/Hamlib/Hamlib/releases/latest"
@@ -608,7 +608,7 @@ EOF
       	cd $HOME
       	[ -d "$HOME/kenwood" ] && rm -rf kenwood/
       	git clone $KENWOOD_GIT_URL || { echo >&2 "======= git clone $KENWOOD_GIT_URL failed ========"; exit 1; }
-			INSTALLED_VER="$(grep -i "^VERSION" /usr/local/bin/710.sh)"
+			INSTALLED_VER="$(egrep "^#-.*version" /usr/local/bin/710.sh | tr -s ' ' | cut -d' ' -f4)"
 			LATEST_VER="$(grep -i "^VERSION" kenwood/710.sh)"
 			if [[ $INSTALLED_VER == $LATEST_VER ]]
 			then
