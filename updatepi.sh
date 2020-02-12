@@ -3,7 +3,7 @@
 # YAD/shell script to install or update certain ham applications, as well as 
 # update Raspbian OS and apps.
 
-VERSION="1.73.11"
+VERSION="1.73.13"
 
 function Help () {
 	BROWSER="$(command -v chromium-browser)"
@@ -78,7 +78,7 @@ function GenerateList () {
 	DESC[wsjtx]="Weak Signal Modes Modem"
 	DESC[xastir]="APRS Tracking and Mapping Utility"
 	
-	echo -e "${CHECKED[$1]}\nRaspbian OS and Apps\nUpdate Raspbian OS and Apps\nCheck for Updates" > "$TFILE"
+	echo -e "${CHECKED[$1]}\n<s>Raspbian OS and Apps</s>\nUpdate Raspbian OS and Apps\nCheck for Updates" > "$TFILE"
 	for A in $LIST 
 	do 
 		case $A in
@@ -241,6 +241,11 @@ else
    echo
    if [[ $OSUPDATES == "YES" ]]
    then
+   	yad --center --title="Update Apps/OS - version $VERSION" --info --borders=30 \
+--no-wrap --text-align=center --text="<b>Raspbian OS Updates are temporarily DISABLED due to a kernel bug that affects the Fe-Pi audio board</b>\n\n" \
+--buttons-layout=center \
+--button=Close:0
+		exit 0
       echo "Checking for regular Raspberry Pi OS updates..."
 		echo
       sudo apt update
