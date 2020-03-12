@@ -16,7 +16,7 @@
 #
 #=========================================================================================
 
-VERSION="1.74.5"
+VERSION="1.74.6"
 
 GITHUB_URL="https://github.com"
 HAMLIB_LATEST_URL="$GITHUB_URL/Hamlib/Hamlib/releases/latest"
@@ -737,6 +737,7 @@ EOF
 				INSTALLED_VER="$(dpkg -s $APP | grep "^Version:" | cut -d' ' -f2)"
 				if [[ $INSTALLED_VER == $LATEST_VER ]]
 				then # No need to update.  No further action needed for $APP
+					rm -f $PKG
 					echo "============= $APP is installed and up to date ============="
 					continue
 				else
