@@ -3,7 +3,7 @@
 # YAD/shell script to install or update certain ham applications, as well as 
 # update Raspbian OS and apps.
 
-VERSION="1.73.13"
+VERSION="1.74.4"
 
 function Help () {
 	BROWSER="$(command -v chromium-browser)"
@@ -28,6 +28,7 @@ function Help () {
 	APPS[710.sh]="https://github.com/AG7GN/kenwood/blob/master/README.md"
 	APPS[pmon]="https://www.p4dragon.com/en/PMON.html"
 	APPS[hampi-rmsgw]="https://github.com/AG7GN/rmsgw/blob/master/README.md"
+	APPS[js8call]="http://js8call.com"
 	APP="$2"
 	$BROWSER ${APPS[$APP]} 2>/dev/null &
 }
@@ -55,7 +56,7 @@ function GenerateList () {
 	declare -a CHECKED
 	CHECKED[0]="FALSE"
 	CHECKED[1]="TRUE"
-	LIST="710.sh arim autohotspot chirp direwolf flamp fldigi flmsg flrig flwrap hamapps hampi-backup-restore.sh hampi-iptables hampi-rmsgw hampi-utilities pat piardop2 pmon wsjtx xastir"
+	LIST="710.sh arim autohotspot chirp direwolf flamp fldigi flmsg flrig flwrap hamapps hampi-backup-restore.sh hampi-iptables hampi-rmsgw hampi-utilities js8call pat piardop2 pmon wsjtx xastir"
 	declare -A DESC
 	DESC[710.sh]="Rig Control Script for Kenwood 710/71A"
 	DESC[arim]="Amateur Radio Instant Messaging"
@@ -72,6 +73,7 @@ function GenerateList () {
 	DESC[hampi-iptables]="Firewall Rules for Hampi Image"
 	DESC[hampi-rmsgw]="RMS Gateway software for the Hampi Image"
 	DESC[hampi-utilities]="Scripts and Apps for Hampi Image"
+	DESC[js8call]="Weak signal keyboard to keyboard messaging using JS8"
 	DESC[pat]="Winlink Email Client"
 	DESC[piardop2]="Amateur Radio Digital Open Protocol Modem"
 	DESC[pmon]="PACTOR Monitoring Utility"
