@@ -16,7 +16,7 @@
 #
 #=========================================================================================
 
-VERSION="1.74.6"
+VERSION="1.74.7"
 
 GITHUB_URL="https://github.com"
 HAMLIB_LATEST_URL="$GITHUB_URL/Hamlib/Hamlib/releases/latest"
@@ -729,6 +729,7 @@ EOF
          echo "=========== Retrieving $APP from $JS8CALL_URL ==========="
          mkdir -p $SRC_DIR/$APP
          cd $SRC_DIR/$APP
+         rm -f *armhf.deb
          PKG="${PKG_URL##*/}"
 			wget -q -O $PKG $PKG_URL || { echo >&2 "======= $PKG_URL download failed with $? ========"; exit 1; }
 			LATEST_VER="$(dpkg -I $PKG | grep "^ Version:" | cut -d' ' -f3)"
@@ -749,7 +750,7 @@ EOF
 				echo "============= Installing $APP ============="
 			fi
 			sudo apt install -y libgfortran3 libqt5multimedia5-plugins libqt5serialport5 libqt5sql5-sqlite libfftw3-single3 || aptError "sudo apt install -y libqt5multimedia5-plugins libqt5serialport5 libqt5sql5-sqlite libfftw3-single3" 
-         sudo dpkg -i $PKG && rm -f $PKG || { rm -f $PKG; echo >&2 "======= $PKG install failed with $? ========"; exit 1; }
+         sudo dpkg -i $PKG || { echo >&2 "======= $PKG install failed with $? ========"; exit 1; }
          sudo sed -i 's/AudioVideo;Audio;//' /usr/share/applications/$APP.desktop 2>/dev/null
          lxpanelctl restart
          echo "========= $APP installation complete ==========="
