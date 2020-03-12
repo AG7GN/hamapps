@@ -3,7 +3,7 @@
 # YAD/shell script to install or update certain ham applications, as well as 
 # update Raspbian OS and apps.
 
-VERSION="1.74.4"
+VERSION="1.74.5"
 
 function Help () {
 	BROWSER="$(command -v chromium-browser)"
@@ -37,7 +37,7 @@ export -f Help
 function GenerateTable () {
 	# Takes 1 argument:  The first word of the middle button ("Select" or "Unselect")
 
-	ANS="$(yad --center --title="Update Apps/OS - version $VERSION" --list --borders=10 --height=600 --width=820 --text-align=center \
+	ANS="$(yad --center --title="Update Apps/OS - version $VERSION" --list --borders=10 --height=600 --width=900 --text-align=center \
 	--text "<b>This script will install and/or check for and install updates for the apps you select below.\n \
 If there are updates available, it will install them.</b>\n\n \
 <b><span color='blue'>For information about or help with an app, double-click the app's name.</span></b>\n \
@@ -80,7 +80,7 @@ function GenerateList () {
 	DESC[wsjtx]="Weak Signal Modes Modem"
 	DESC[xastir]="APRS Tracking and Mapping Utility"
 	
-	echo -e "${CHECKED[$1]}\n<s>Raspbian OS and Apps</s>\nUpdate Raspbian OS and Apps\nCheck for Updates" > "$TFILE"
+	echo -e "${CHECKED[$1]}\n<s>Raspbian OS and Apps</s>\n<s>Update Raspbian OS and Apps</s>\n<s>Check for Updates</s>" > "$TFILE"
 	for A in $LIST 
 	do 
 		case $A in
