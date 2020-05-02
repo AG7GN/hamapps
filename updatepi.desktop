@@ -1,5 +1,5 @@
 [Desktop Entry]
-Name=Update Pi and Ham Apps
+Name=Update Pi and Ham Software
 GenericName=Update Pi and Ham Software
 Comment=Update the Raspberry Pi OS and applications
 Exec=lxterminal --geometry=90x30 -t "Update Apps/OS" -e "/usr/local/bin/updatepi.sh"

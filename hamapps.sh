@@ -16,7 +16,7 @@
 #
 #=========================================================================================
 
-VERSION="1.74.8"
+VERSION="1.74.10"
 
 GITHUB_URL="https://github.com"
 HAMLIB_LATEST_URL="$GITHUB_URL/Hamlib/Hamlib/releases/latest"
@@ -195,7 +195,7 @@ then
    exit 1
 fi
 sudo apt-get --fix-broken -y install || aptError "sudo apt-get --fix-broken -y install"
-sudo apt install -y extra-xdg-menus bc dnsutils libgtk-3-bin || aptError "sudo apt install -y extra-xdg-menus bc"
+sudo apt install -y extra-xdg-menus bc dnsutils libgtk-3-bin jq moreutils || aptError "Unable to install required packages."
 
 APPS="$(echo "${2,,}" | tr ',' '\n' | sort -u | xargs)" 
 
@@ -203,7 +203,7 @@ if ! [ -d /usr/local/src/hampi ]
 then
 	sudo mkdir -p $SRC_DIR
 fi	
-sudo chown pi:pi $SRC_DIR
+sudo chown $USER:$USER $SRC_DIR
 
 for APP in $APPS
 do
@@ -551,7 +551,7 @@ EOF
       		[ -d "/usr/local/src/hampi/hampi-utilities" ] && rm -rf hamp-utilities/
 				cd /usr/local/src/hampi
       		git clone $HAMPIUTILS_GIT_URL || { echo >&2 "======= git clone $HAMPIUTILS_GIT_URL failed ========"; exit 1; }
-      		sudo chown pi:pi hampi-utilities/*
+      		sudo chown $USER:$USER hampi-utilities/*
       		chmod +x hampi-utilities/*.sh
       		cp -f hampi-utilities/hampi-utilities.version /usr/local/src/hampi/
       		cp -f hampi-utilities/*.conf /usr/local/src/hampi/
