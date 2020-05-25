@@ -3,7 +3,7 @@
 # YAD/shell script to install or update certain ham applications, as well as 
 # update Raspbian OS and apps.
 
-VERSION="1.74.10"
+VERSION="1.75.0"
 
 function Help () {
 	BROWSER="$(command -v chromium-browser)"
@@ -37,8 +37,9 @@ export -f Help
 function GenerateTable () {
 	# Takes 1 argument:  The first word of the middle button ("Select" or "Unselect")
 
-	ANS="$(yad --center --title="Update Apps/OS - version $VERSION" --list --borders=10 --height=600 --width=900 --text-align=center \
-	--text "<b>This script will install and/or check for and install updates for the apps you select below.\n \
+	ANS="$(yad --center --title="Update Apps/OS - version $VERSION" --list --borders=10 \
+		--height=600 --width=900 --text-align=center \
+		--text "<b>This script will install and/or check for and install updates for the apps you select below.\n \
 If there are updates available, it will install them.</b>\n\n \
 <b><span color='blue'>For information about or help with an app, double-click the app's name.</span></b>\n \
 This will open the Pi's web browser.\n \
