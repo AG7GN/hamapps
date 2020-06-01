@@ -3,7 +3,7 @@
 # YAD/shell script to install or update certain ham applications, as well as 
 # update Raspbian OS and apps.
 
-VERSION="1.75.0"
+VERSION="1.76.3"
 
 function Help () {
 	BROWSER="$(command -v chromium-browser)"
@@ -81,7 +81,8 @@ function GenerateList () {
 	DESC[wsjtx]="Weak Signal Modes Modem"
 	DESC[xastir]="APRS Tracking and Mapping Utility"
 	
-	echo -e "${CHECKED[$1]}\n<s>Raspbian OS and Apps</s>\n<s>Update Raspbian OS and Apps</s>\n<s>Check for Updates</s>" > "$TFILE"
+#	echo -e "${CHECKED[$1]}\n<s>Raspbian OS and Apps</s>\n<s>Update Raspbian OS and Apps</s>\n<s>Check for Updates</s>" > "$TFILE"
+	echo -e "${CHECKED[$1]}\nRaspbian OS and Apps\nUpdate Raspbian OS and Apps\nCheck for Updates" > "$TFILE"
 	for A in $LIST 
 	do 
 		case $A in
@@ -127,6 +128,32 @@ function GenerateList () {
 	done
 }
 
+function selfUpdate () {
+	# Check for and install hamapps.sh updates
+	echo "============= Checking for updates to updatepi.sh and hamapps.sh ========"
+	cd $HOME
+	[ -d "$HOME/hamapps" ] && rm -rf hamapps/
+	git clone $HAMAPPS_GIT_URL || { echo >&2 "======= git clone $HAMAPPS_GIT_URL failed ========"; exit 1; }
+	INSTALLED_VER="$(grep -i "^VERSION" $(which hamapps.sh))"
+	LATEST_VER="$(grep -i "^VERSION" hamapps/hamapps.sh)"
+	if [[ $INSTALLED_VER == $LATEST_VER ]]
+	then
+		echo "============= updatepi.sh and hamapps.sh are up to date ============="
+	else
+		sudo cp -f hamapps/updatepi.desktop /usr/local/share/applications/
+		sudo cp -f hamapps/*.sh /usr/local/bin/
+		[ -f $HOME/.local/share/applications/updatepi.desktop ] && rm -f $HOME/.local/share/applications/updatepi.desktop
+  		echo "============= updatepi.sh and hamapps.sh have been updated =============="
+  		echo
+  		yad --center --title="Update Apps/OS - version $VERSION" --info --borders=30 \
+--no-wrap --text="A new version of this script has been installed.\n\nPlease \
+run <b>Raspberry > Hamradio > Update Pi and Ham Apps</b> again." --buttons-layout=center \
+--button=Close:0
+  		exit 0
+	fi
+	rm -rf hamapps/
+}
+
 REBOOT="NO"
 APPS=""
 OSUPDATES=NO
@@ -143,29 +170,8 @@ and run this script again.</b>" --buttons-layout=center \
    exit 1
 fi
 
-# Check for and install hamapps.sh updates
-echo "============= Checking for updates to updatepi.sh and hamapps.sh ========"
-cd $HOME
-[ -d "$HOME/hamapps" ] && rm -rf hamapps/
-git clone $HAMAPPS_GIT_URL || { echo >&2 "======= git clone $HAMAPPS_GIT_URL failed ========"; exit 1; }
-INSTALLED_VER="$(grep -i "^VERSION" $(which hamapps.sh))"
-LATEST_VER="$(grep -i "^VERSION" hamapps/hamapps.sh)"
-if [[ $INSTALLED_VER == $LATEST_VER ]]
-then
-	echo "============= updatepi.sh and hamapps.sh are up to date ============="
-else
-	sudo cp -f hamapps/updatepi.desktop /usr/local/share/applications/
-	sudo cp -f hamapps/*.sh /usr/local/bin/
-	[ -f $HOME/.local/share/applications/updatepi.desktop ] && rm -f $HOME/.local/share/applications/updatepi.desktop
-  	echo "============= updatepi.sh and hamapps.sh have been updated =============="
-  	echo
-  	yad --center --title="Update Apps/OS - version $VERSION" --info --borders=30 \
---no-wrap --text="A new version of this script has been installed.\n\nPlease \
-run <b>Raspberry > Hamradio > Update Pi and Ham Apps</b> again." --buttons-layout=center \
---button=Close:0
-  	exit 0
-fi
-rm -rf hamapps/
+# Comment the following line out to prevent self-updating of this script.
+selfUpdate
 
 # Move the direwolf scripts to /usr/local/bin if necessary
 if ls $HOME/dw-*.sh >/dev/null 2>&1
@@ -226,6 +232,8 @@ else
 	UPDATES="$(echo "$ANS" | grep Updates | cut -d, -f2 | tr '\n' ',' | sed 's/,$//')"
 	INSTALLS="$(echo "$ANS" | grep "New Install" | cut -d, -f2 | tr '\n' ',' | sed 's/,$//')"
    echo
+   # If doing OS updates, aslo check for Fe-Pi and pulsaudio config file updates
+	[[ $OSUPDATES == "YES" ]] && UPDATES+=",fe-pi"
    if [[ $UPDATES != "" ]]
 	then
       echo "Looking for updates to $UPDATES..."
@@ -244,20 +252,20 @@ else
    echo
    if [[ $OSUPDATES == "YES" ]]
    then
-   	yad --center --title="Update Apps/OS - version $VERSION" --info --borders=30 \
---no-wrap --text-align=center --text="<b>Raspbian OS Updates are temporarily DISABLED due to a kernel bug that affects the Fe-Pi audio board</b>\n\n" \
---buttons-layout=center \
---button=Close:0
-		exit 0
+#   	yad --center --title="Update Apps/OS - version $VERSION" --info --borders=30 \
+#--no-wrap --text-align=center --text="<b>Raspbian OS Updates are temporarily DISABLED due to a kernel bug that affects the Fe-Pi audio board</b>\n\n" \
+#--buttons-layout=center \
+#--button=Close:0
+#		exit 0
       echo "Checking for regular Raspberry Pi OS updates..."
 		echo
       sudo apt update
-      sudo apt -y upgrade && echo -e "\n\n=========== Raspbian OS Update Finished ==========="
+      sudo apt -y full-upgrade && echo -e "\n\n=========== Raspbian OS Update Finished ==========="
       # Make sure pulseaudio is not default sound device.  If pulseaudio is updated,
       # it might restore this file and make pulseaudio the default sound interface.
       # So, we make sure every nonempty line is commented out.
       sudo sed -i -e '/^[^#]/ s/^#*/#/' /usr/share/alsa/pulse-alsa.conf
-   fi
+	fi
 fi
 
 if [[ $REBOOT == "YES" ]]

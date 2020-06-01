@@ -16,7 +16,7 @@
 #
 #=========================================================================================
 
-VERSION="1.75.0"
+VERSION="1.76.3"
 
 GITHUB_URL="https://github.com"
 HAMLIB_LATEST_URL="$GITHUB_URL/Hamlib/Hamlib/releases/latest"
@@ -43,6 +43,7 @@ PMON_REPO="https://www.scs-ptc.com/repo/packages/"
 PMON_GIT_URL="$GITHUB_URL/AG7GN/pmon"
 HAMPIRMSGW_GIT_URL="$GITHUB_URL/AG7GN/rmsgw"
 JS8CALL_URL="http://files.js8call.com/latest.html"
+FEPI_GIT_URL="$GITHUB_URL/AG7GN/fe-pi"
 
 REBOOT="NO"
 SRC_DIR="/usr/local/src/hampi"
@@ -548,8 +549,8 @@ EOF
 			then
 				echo "============= hampi-utilities are up to date ============="
 			else
-      		[ -d "/usr/local/src/hampi/hampi-utilities" ] && rm -rf hamp-utilities/
 				cd /usr/local/src/hampi
+      		[ -d "/usr/local/src/hampi/hampi-utilities" ] && rm -rf hamp-utilities/
       		git clone $HAMPIUTILS_GIT_URL || { echo >&2 "======= git clone $HAMPIUTILS_GIT_URL failed ========"; exit 1; }
       		sudo chown $USER:$USER hampi-utilities/*
       		chmod +x hampi-utilities/*.sh
@@ -567,6 +568,47 @@ EOF
 	     		REBOOT="YES"
 			fi
      		rm -f /tmp/hampi-utilities.version
+      	;;
+      fe-pi)
+      	echo "========= fe-pi pulseaudio install/update requested ========"
+ 			VERSION_FILE_URL="https://raw.githubusercontent.com/AG7GN/fe-pi/master/fe-pi.version"
+      	wget -qO /tmp/fe-pi.version $VERSION_FILE_URL || { echo >&2 "======= $VERSION_FILE_URL download failed with $? ========"; exit 1; }
+      	if [ -s /usr/local/src/hampi/fe-pi.version ]
+			then
+				INSTALLED_VER="$(grep -i "^VERSION" /usr/local/src/hampi/fe-pi.version)"
+			else
+			   INSTALLED_VER="NONE"
+			fi
+			LATEST_VER="$(grep -i "^VERSION" /tmp/fe-pi.version)"
+			echo "INSTALLED: $INSTALLED_VER   LATEST: $LATEST_VER"
+			if [[ $INSTALLED_VER == $LATEST_VER ]]
+			then
+				echo "============= fe-pi pulseaudio files are up to date ============="
+			else
+				cd /usr/local/src/hampi
+      		[ -d "/usr/local/src/hampi/fe-pi" ] && rm -rf fe-pi/
+      		git clone $FEPI_GIT_URL || { echo >&2 "======= git clone $FEPI_GIT_URL failed ========"; exit 1; }
+      		sudo chown $USER:$USER fe-pi/*
+      		cp -f fe-pi/fe-pi.version /usr/local/src/hampi/
+      		[[ -s /etc/asound.conf ]] && sudo mv /etc/asound.conf /etc/asound.conf.previous
+      		sudo cp -f fe-pi/etc/asound.conf /etc/
+      		[[ -s /etc/pulse/default.pa ]] && sudo mv /etc/pulse/default.pa /etc/pulse/default.pa.previous
+      		sudo cp -f fe-pi/etc/pulse/default.pa /etc/pulse/
+	     		rm -rf fe-pi/
+	      	echo "============= fe-pi pulseaudio updated =============="
+	     		REBOOT="YES"
+			fi
+	      # Append sound directives to the end of cmdline.txt to restore ALSA sound
+	      # interface definitions using the old method (needed for compatibility with Fldigi
+	      # alert sounds as well as to retain the ability to switch between HDMI and 
+	      # Analog from the Desktop).
+	      CMD_STRING="snd-bcm2835.enable_compat_alsa=1 snd-bcm2835.enable_hdmi=0 snd-bcm2835.enable_headphones=0"
+			if ! grep -q $CMD_STRING /boot/cmdline.txt 2>/dev/null
+     		then
+     			sudo sed -i -e "s/$/ $CMD_STRING/" /boot/cmdline.txt
+	     		REBOOT="YES"
+			fi
+     		rm -f /tmp/fe-pi.version
       	;;
       autohotspot)
       	echo "============= autohotspot install/update requested ========"
