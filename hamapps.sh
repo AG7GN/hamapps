@@ -16,7 +16,7 @@
 #
 #=========================================================================================
 
-VERSION="1.76.3"
+VERSION="1.76.4"
 
 GITHUB_URL="https://github.com"
 HAMLIB_LATEST_URL="$GITHUB_URL/Hamlib/Hamlib/releases/latest"
@@ -47,6 +47,7 @@ FEPI_GIT_URL="$GITHUB_URL/AG7GN/fe-pi"
 
 REBOOT="NO"
 SRC_DIR="/usr/local/src/hampi"
+SHARE_DIR="/usr/local/share/hampi"
 
 export CXXFLAGS='-O2 -march=armv8-a -mtune=cortex-a53'
 export CFLAGS='-O2 -march=armv8-a -mtune=cortex-a53'
@@ -200,11 +201,15 @@ sudo apt install -y extra-xdg-menus bc dnsutils libgtk-3-bin jq moreutils || apt
 
 APPS="$(echo "${2,,}" | tr ',' '\n' | sort -u | xargs)" 
 
-if ! [ -d /usr/local/src/hampi ]
-then
-	sudo mkdir -p $SRC_DIR
-fi	
-sudo chown $USER:$USER $SRC_DIR
+# Make hampi source and share folders if necessary
+for D in $SRC_DIR $SHARE_DIR
+do
+	if [[ ! -d $D ]]
+	then
+		sudo mkdir -p $D
+		sudo chown $USER:$USER $D
+	fi	
+done
 
 for APP in $APPS
 do
@@ -537,9 +542,9 @@ EOF
       	echo "========= hampi-utilities install/update requested ========"
  			VERSION_FILE_URL="https://raw.githubusercontent.com/AG7GN/hampi-utilities/master/hampi-utilities.version"
       	wget -qO /tmp/hampi-utilities.version $VERSION_FILE_URL || { echo >&2 "======= $VERSION_FILE_URL download failed with $? ========"; exit 1; }
-      	if [ -s /usr/local/src/hampi/hampi-utilities.version ]
+      	if [ -s $SRC_DIR/hampi-utilities.version ]
 			then
-				INSTALLED_VER="$(grep -i "^VERSION" /usr/local/src/hampi/hampi-utilities.version)"
+				INSTALLED_VER="$(grep -i "^VERSION" $SRC_DIR/hampi-utilities.version)"
 			else
 			   INSTALLED_VER="NONE"
 			fi
@@ -549,14 +554,14 @@ EOF
 			then
 				echo "============= hampi-utilities are up to date ============="
 			else
-				cd /usr/local/src/hampi
-      		[ -d "/usr/local/src/hampi/hampi-utilities" ] && rm -rf hamp-utilities/
+				cd $SRC_DIR
+      		[ -d "$SRC_DIR/hampi-utilities" ] && rm -rf hamp-utilities/
       		git clone $HAMPIUTILS_GIT_URL || { echo >&2 "======= git clone $HAMPIUTILS_GIT_URL failed ========"; exit 1; }
       		sudo chown $USER:$USER hampi-utilities/*
       		chmod +x hampi-utilities/*.sh
-      		cp -f hampi-utilities/hampi-utilities.version /usr/local/src/hampi/
-      		cp -f hampi-utilities/*.conf /usr/local/src/hampi/
-      		cp -f hampi-utilities/*.html /usr/local/share/hampi/
+      		cp -f hampi-utilities/hampi-utilities.version $SRC_DIR/
+      		cp -f hampi-utilities/*.conf $SRC_DIR/
+      		cp -f hampi-utilities/*.html $SHARE_DIR/
       		cp -f hampi-utilities/*.jpg $HOME/Pictures/
       		cp -f hampi-utilities/*.example $HOME/
       		sudo cp -f hampi-utilities/*.sh /usr/local/bin/
@@ -573,9 +578,9 @@ EOF
       	echo "========= fe-pi pulseaudio install/update requested ========"
  			VERSION_FILE_URL="https://raw.githubusercontent.com/AG7GN/fe-pi/master/fe-pi.version"
       	wget -qO /tmp/fe-pi.version $VERSION_FILE_URL || { echo >&2 "======= $VERSION_FILE_URL download failed with $? ========"; exit 1; }
-      	if [ -s /usr/local/src/hampi/fe-pi.version ]
+      	if [ -s $SRC_DIR/fe-pi.version ]
 			then
-				INSTALLED_VER="$(grep -i "^VERSION" /usr/local/src/hampi/fe-pi.version)"
+				INSTALLED_VER="$(grep -i "^VERSION" $SRC_DIR/fe-pi.version)"
 			else
 			   INSTALLED_VER="NONE"
 			fi
@@ -585,11 +590,11 @@ EOF
 			then
 				echo "============= fe-pi pulseaudio files are up to date ============="
 			else
-				cd /usr/local/src/hampi
-      		[ -d "/usr/local/src/hampi/fe-pi" ] && rm -rf fe-pi/
+				cd $SRC_DIR
+      		[ -d "$SRC_DIR/fe-pi" ] && rm -rf fe-pi/
       		git clone $FEPI_GIT_URL || { echo >&2 "======= git clone $FEPI_GIT_URL failed ========"; exit 1; }
       		sudo chown $USER:$USER fe-pi/*
-      		cp -f fe-pi/fe-pi.version /usr/local/src/hampi/
+      		cp -f fe-pi/fe-pi.version $SRC_DIR/
       		[[ -s /etc/asound.conf ]] && sudo mv /etc/asound.conf /etc/asound.conf.previous
       		sudo cp -f fe-pi/etc/asound.conf /etc/
       		[[ -s /etc/pulse/default.pa ]] && sudo mv /etc/pulse/default.pa /etc/pulse/default.pa.previous
@@ -743,9 +748,9 @@ EOF
       	echo "============= hampi-rmsgw install/update requested ========"
 			VERSION_FILE_URL="https://raw.githubusercontent.com/AG7GN/rmsgw/master/hampi-rmsgw.version"
       	wget -qO /tmp/hampi-rmsgw.version $VERSION_FILE_URL || { echo >&2 "======= $VERSION_FILE_URL download failed with $? ========"; exit 1; }
-      	if [ -s /usr/local/src/hampi/hampi-rmsgw.version ]
+      	if [ -s $SRC_DIR/hampi-rmsgw.version ]
 			then
-				INSTALLED_VER="$(grep -i "^VERSION" /usr/local/src/hampi/hampi-rmsgw.version)"
+				INSTALLED_VER="$(grep -i "^VERSION" $SRC_DIR/hampi-rmsgw.version)"
 			else
 			   INSTALLED_VER="NONE"
 			fi
@@ -755,12 +760,12 @@ EOF
 			then
 				echo "============= hampi-rmsgw is up to date ============="
 			else
-				cd /usr/local/src/hampi
-	      	[ -d "/usr/local/src/hampi/rmsgw" ] && rm -rf rmsgw/
+				cd $SRC_DIR
+	      	[ -d "$SRC_DIR/rmsgw" ] && rm -rf rmsgw/
 				git clone $HAMPIRMSGW_GIT_URL || { echo >&2 "======= git clone $HAMPIRMSGW_GIT_URL failed ========"; exit 1; }
 				cd rmsgw
 				./install-rmsgw.sh
-				cp -f hampi-rmsgw.version /usr/local/src/hampi/
+				cp -f hampi-rmsgw.version $SRC_DIR/
 	      	echo "============= hampi-utilities installed =============="
 			fi
 			rm -f /tmp/hampi-rmsgw.version

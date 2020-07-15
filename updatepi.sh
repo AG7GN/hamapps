@@ -3,7 +3,7 @@
 # YAD/shell script to install or update certain ham applications, as well as 
 # update Raspbian OS and apps.
 
-VERSION="1.76.3"
+VERSION="1.76.4"
 
 function Help () {
 	BROWSER="$(command -v chromium-browser)"
