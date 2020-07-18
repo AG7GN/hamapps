@@ -3,7 +3,7 @@
 # YAD/shell script to install or update certain ham applications, as well as 
 # update Raspbian OS and apps.
 
-VERSION="1.76.5"
+VERSION="1.76.6"
 
 function Help () {
 	BROWSER="$(command -v chromium-browser)"
@@ -76,7 +76,7 @@ function GenerateList () {
 	DESC[hampi-utilities]="Scripts and Apps for Hampi Image"
 	DESC[js8call]="Weak signal keyboard to keyboard messaging using JS8"
 	DESC[pat]="Winlink Email Client"
-	DESC[piardop]="Amateur Radio Digital Open Protocol Modem, versions 1&2"
+	DESC[piardop]="Amateur Radio Digital Open Protocol Modem Versions 1&#x26;2"
 	DESC[pmon]="PACTOR Monitoring Utility"
 	DESC[wsjtx]="Weak Signal Modes Modem"
 	DESC[xastir]="APRS Tracking and Mapping Utility"
