@@ -16,7 +16,7 @@
 #
 #=========================================================================================
 
-VERSION="1.76.4"
+VERSION="1.76.5"
 
 GITHUB_URL="https://github.com"
 HAMLIB_LATEST_URL="$GITHUB_URL/Hamlib/Hamlib/releases/latest"
@@ -29,8 +29,8 @@ DIREWOLF_LATEST="$DIREWOLF_GIT_URL/archive/dev.zip"
 XASTIR_GIT_URL="$GITHUB_URL/Xastir/Xastir.git"
 ARIM_URL="https://www.whitemesa.net/arim/arim.html"
 GARIM_URL="https://www.whitemesa.net/garim/garim.html"
-#PIARDOP_URL="http://www.cantab.net/users/john.wiseman/Downloads/Beta/piardopc"
-PIARDOP_URL="http://www.cantab.net/users/john.wiseman/Downloads/Beta/piardop2"
+PIARDOP_URL="http://www.cantab.net/users/john.wiseman/Downloads/Beta/piardopc"
+PIARDOP2_URL="http://www.cantab.net/users/john.wiseman/Downloads/Beta/piardop2"
 PAT_GIT_URL="$GITHUB_URL/la5nta/pat/releases"
 CHIRP_URL="https://trac.chirp.danplanet.com/chirp_daily/LATEST"
 HAMAPPS_GIT_URL="$GITHUB_URL/AG7GN/hamapps"
@@ -81,8 +81,8 @@ function Usage () {
    echo "   arim is a messaging, file transfer and keyboard-to-keyboard chat"
    echo "   program. It is designed to use the ARDOP (Amateur Radio Digital"
    echo "   Open Protocol) for communication between stations.  Installing"
-   echo "   arim will automatically install piardopc, an implementation of"
-   echo "   ARDOP for the Raspberry Pi.  garim is the graphical version of"
+   echo "   arim will automatically install piardopc and piardop2, implementations of"
+   echo "   ARDOP versions 1 and 2 for the Raspberry Pi.  garim is the graphical version of"
    echo "   arim.  Requesting an arim install will install both arim and"
    echo "   garim."
    echo
@@ -126,14 +126,19 @@ function installHamlib () {
 }
 
 function installPiardop () {
-   echo "=========== Installing piardop ==========="
-   cd $HOME
-   PIARDOP_BIN="${PIARDOP_URL##*/}"
-   echo "=========== Downloading $PIARDOP_URL ==========="
-   wget -q -O $PIARDOP_BIN $PIARDOP_URL || { echo >&2 "======= $PIARDOP_URL download failed with $? ========"; exit 1; }
-   chmod +x $PIARDOP_BIN
-   sudo mv $PIARDOP_BIN /usr/local/bin/
-#	cat > $HOME/.asoundrc << EOF
+	declare -A ARDOP
+	ARDOP[1]="$PIARDOP_URL"
+	ARDOP[2]="$PIARDOP2_URL"
+  	cd $HOME
+	for V in "${!ARDOP[@]}"
+	do
+   	echo "=========== Installing piardop version $V ==========="
+   	PIARDOP_BIN="${ARDOP[$V]##*/}"
+   	echo "=========== Downloading ${ARDOP[$V]} ==========="
+   	wget -q -O $PIARDOP_BIN "${ARDOP[$V]}" || { echo >&2 "======= ${ARDOP[$V]} download failed with $? ========"; exit 1; }
+   	chmod +x $PIARDOP_BIN
+   	sudo mv $PIARDOP_BIN /usr/local/bin/
+#	    cat > $HOME/.asoundrc << EOF
 #pcm.ARDOP {
 #type rate
 #slave {
@@ -142,7 +147,8 @@ function installPiardop () {
 #}
 #}
 #EOF
-   echo "=========== piardop installed  ==========="
+   	echo "=========== piardop version $V installed  ==========="
+   done
 }
 
 function aptError () {
@@ -444,7 +450,7 @@ EOF
          lxpanelctl restart
          echo "========= $APP installation complete ==========="
          ;;
-      piardop*)
+      piardop)
          installPiardop
          ;;
       arim)

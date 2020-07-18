@@ -3,7 +3,7 @@
 # YAD/shell script to install or update certain ham applications, as well as 
 # update Raspbian OS and apps.
 
-VERSION="1.76.4"
+VERSION="1.76.5"
 
 function Help () {
 	BROWSER="$(command -v chromium-browser)"
@@ -16,7 +16,7 @@ function Help () {
 	APPS[direwolf]="https://github.com/wb2osz/direwolf"
 	APPS[pat]="https://getpat.io/"
 	APPS[arim]="https://www.whitemesa.net/arim/arim.html"
-	APPS[piardop2]="https://www.whitemesa.net/arim/arim.html"
+	APPS[piardop]="https://www.whitemesa.net/arim/arim.html"
 	APPS[chirp]="https://chirp.danplanet.com/projects/chirp/wiki/Home"
 	APPS[wsjtx]="https://physics.princeton.edu/pulsar/K1JT/wsjtx.html"
 	APPS[xastir]="http://xastir.org/index.php/Main_Page"
@@ -57,7 +57,7 @@ function GenerateList () {
 	declare -a CHECKED
 	CHECKED[0]="FALSE"
 	CHECKED[1]="TRUE"
-	LIST="710.sh arim autohotspot chirp direwolf flamp fldigi flmsg flrig flwrap hamapps hampi-backup-restore.sh hampi-iptables hampi-rmsgw hampi-utilities js8call pat piardop2 pmon wsjtx xastir"
+	LIST="710.sh arim autohotspot chirp direwolf flamp fldigi flmsg flrig flwrap hamapps hampi-backup-restore.sh hampi-iptables hampi-rmsgw hampi-utilities js8call pat piardop pmon wsjtx xastir"
 	declare -A DESC
 	DESC[710.sh]="Rig Control Script for Kenwood 710/71A"
 	DESC[arim]="Amateur Radio Instant Messaging"
@@ -76,7 +76,7 @@ function GenerateList () {
 	DESC[hampi-utilities]="Scripts and Apps for Hampi Image"
 	DESC[js8call]="Weak signal keyboard to keyboard messaging using JS8"
 	DESC[pat]="Winlink Email Client"
-	DESC[piardop2]="Amateur Radio Digital Open Protocol Modem"
+	DESC[piardop]="Amateur Radio Digital Open Protocol Modem, versions 1&2"
 	DESC[pmon]="PACTOR Monitoring Utility"
 	DESC[wsjtx]="Weak Signal Modes Modem"
 	DESC[xastir]="APRS Tracking and Mapping Utility"
