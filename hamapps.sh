@@ -16,7 +16,7 @@
 #
 #=========================================================================================
 
-VERSION="1.76.9"
+VERSION="1.76.10"
 
 GITHUB_URL="https://github.com"
 HAMLIB_LATEST_URL="$GITHUB_URL/Hamlib/Hamlib/releases/latest"
@@ -44,7 +44,8 @@ PMON_GIT_URL="$GITHUB_URL/AG7GN/pmon"
 HAMPIRMSGW_GIT_URL="$GITHUB_URL/AG7GN/rmsgw"
 JS8CALL_URL="http://files.js8call.com/latest.html"
 FEPI_GIT_URL="$GITHUB_URL/AG7GN/fe-pi"
-
+LINBPQ_URL="http://www.cantab.net/users/john.wiseman/Downloads/Beta/pilinbpq"
+LINBPQ_DOC="http://www.cantab.net/users/john.wiseman/Downloads/Beta/HTMLPages.zip"
 REBOOT="NO"
 SRC_DIR="/usr/local/src/hampi"
 SHARE_DIR="/usr/local/share/hampi"
@@ -69,7 +70,7 @@ function Usage () {
    echo "Where:"
    echo "   <apps> is one or more apps, separated by comma, from this list:"
    echo "   fldigi,flmsg,flamp,flrig,flwrap,xastir,direwolf,wsjtx,arim,piardop,"
-   echo "   pat,chirp,rigctl,hampi-backup-restore,hampi-iptables,autohotspot,710.sh"
+   echo "   pat,linbpq,chirp,rigctl,hampi-backup-restore,hampi-iptables,autohotspot,710.sh"
    echo
    echo "   Note that if you use \"upgrade\" and the app is not already installed,"
    echo "   this script will install it."
@@ -807,6 +808,36 @@ EOF
          sudo sed -i 's/AudioVideo;Audio;//' /usr/share/applications/$APP.desktop 2>/dev/null
          lxpanelctl restart
          echo "========= $APP installation complete ==========="
+     		;;
+     	linbpq)
+         cd $HOME
+         echo "============= LinBPQ install/update requested ============"
+         wget -q -O pilinbpq $LINBPQ_URL || { echo >&2 "======= $LINBPQ_URL download failed with $? ========"; exit 1; }
+			chmod +x pilinbpq
+			# LinBPQ documentation recommends installing app and config in $HOME
+     	   if [[ -x $HOME/linbpq/linbpq ]]
+     	   then # a version of linbpq is already installed
+     	   	INSTALLED_VER="$($HOME/linbpq/linbpq -v | grep -i version)"
+     	   	LATEST_VER="$($HOME/pilinbpq -v | grep -i version)"
+				if [[ $INSTALLED_VER == $LATEST_VER ]]
+				then # No need to update.  No further action needed for $APP
+					echo "============= $APP is installed and up to date ============="
+					rm -f pilinbpq
+					continue
+				else # New version
+					echo "============= Installing newer version of $APP ============="
+				fi
+			else # No linbpq installed
+				echo "============= Installing LinBPQ ============"
+			fi		
+			mkdir -p $HOME/linbpq/HTML
+			mv -f $HOME/pilinbpq $HOME/linbpq/linbpq
+			DOC="${LINBPQ_DOC##*/}"
+			wget -q -O $DOC $LINBPQ_DOC || { echo >&2 "======= $LINBPQ_DOC download failed with $? ========"; exit 1; }
+			unzip -o -d $HOME/linbpq/HTML $DOC || { echo >&2 "======= Failed to unzip $DOC ========"; exit 1; }
+			rm -f $DOC
+			sudo setcap "CAP_NET_ADMIN=ep CAP_NET_RAW=ep CAP_NET_BIND_SERVICE=ep" $HOME/linbpq/linbpq
+     		echo "============= LinBPQ installed ================="
      		;;
       *)
          echo "Skipping unknown app \"$APP\"."

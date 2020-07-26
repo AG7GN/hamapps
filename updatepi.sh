@@ -3,7 +3,7 @@
 # YAD/shell script to install or update certain ham applications, as well as 
 # update Raspbian OS and apps.
 
-VERSION="1.76.9"
+VERSION="1.76.10"
 
 function Help () {
 	BROWSER="$(command -v chromium-browser)"
@@ -29,6 +29,7 @@ function Help () {
 	APPS[pmon]="https://www.p4dragon.com/en/PMON.html"
 	APPS[hampi-rmsgw]="https://github.com/AG7GN/rmsgw/blob/master/README.md"
 	APPS[js8call]="http://js8call.com"
+	APPS[linbpq]="http://www.cantab.net/users/john.wiseman/Documents/InstallingLINBPQ.html"
 	APP="$2"
 	$BROWSER ${APPS[$APP]} 2>/dev/null &
 }
@@ -57,7 +58,7 @@ function GenerateList () {
 	declare -a CHECKED
 	CHECKED[0]="FALSE"
 	CHECKED[1]="TRUE"
-	LIST="710.sh arim autohotspot chirp direwolf flamp fldigi flmsg flrig flwrap hamapps hampi-backup-restore.sh hampi-iptables hampi-rmsgw hampi-utilities js8call pat piardop pmon wsjtx xastir"
+	LIST="710.sh arim autohotspot chirp direwolf flamp fldigi flmsg flrig flwrap hamapps hampi-backup-restore.sh hampi-iptables hampi-rmsgw hampi-utilities js8call linbpq pat piardop pmon wsjtx xastir"
 	declare -A DESC
 	DESC[710.sh]="Rig Control Script for Kenwood 710/71A"
 	DESC[arim]="Amateur Radio Instant Messaging"
@@ -75,6 +76,7 @@ function GenerateList () {
 	DESC[hampi-rmsgw]="RMS Gateway software for the Hampi Image"
 	DESC[hampi-utilities]="Scripts and Apps for Hampi Image"
 	DESC[js8call]="Weak signal keyboard to keyboard messaging using JS8"
+	DESC[linbpq]="G8BPQ AX25 Networking Package"
 	DESC[pat]="Winlink Email Client"
 	DESC[piardop]="Amateur Radio Digital Open Protocol Modem Versions 1&#x26;2"
 	DESC[pmon]="PACTOR Monitoring Utility"
@@ -118,6 +120,14 @@ function GenerateList () {
 				;;
 			piardop)
 				if command -v piardopc 1>/dev/null 2>&1 && command -v piardop2 1>/dev/null 2>&1
+				then
+   				echo -e "${CHECKED[$1]}\n$A\n${DESC[$A]}\nInstalled - Check for Updates" >> "$TFILE"
+				else
+					echo -e "FALSE\n$A\n${DESC[$A]}\nNew Install" >> "$TFILE"
+				fi		
+				;;
+			linbpq)
+				if [[ -x $HOME/linbpq/linbpq ]]
 				then
    				echo -e "${CHECKED[$1]}\n$A\n${DESC[$A]}\nInstalled - Check for Updates" >> "$TFILE"
 				else
