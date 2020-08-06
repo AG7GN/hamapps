@@ -16,7 +16,7 @@
 #
 #=========================================================================================
 
-VERSION="1.76.11"
+VERSION="1.76.12"
 
 GITHUB_URL="https://github.com"
 HAMLIB_LATEST_URL="$GITHUB_URL/Hamlib/Hamlib/releases/latest"
@@ -217,7 +217,7 @@ do
 		sudo chown $USER:$USER $D
 	fi	
 	# Make sure ownership is pi
-	if [[ $(stat -c '%U' $D) != "pi" || $(stat -c '%G' $D) != "pi" ]]
+	if [[ $(stat -c '%U' $D) != "$USER" || $(stat -c '%G' $D) != "$USER" ]]
 	then
 		sudo chown -R $USER:$USER $D
 	fi	
