@@ -3,7 +3,7 @@
 # YAD/shell script to install or update certain ham applications, as well as 
 # update Raspbian OS and apps.
 
-VERSION="1.76.10"
+VERSION="1.76.11"
 
 function Help () {
 	BROWSER="$(command -v chromium-browser)"
@@ -247,11 +247,11 @@ else
       OSUPDATES=YES
 		ANS="$(echo "$ANS" | grep -v Raspbian)"
    fi
-	UPDATES="$(echo "$ANS" | grep Updates | cut -d, -f2 | tr '\n' ',' | sed 's/,$//')"
-	INSTALLS="$(echo "$ANS" | grep "New Install" | cut -d, -f2 | tr '\n' ',' | sed 's/,$//')"
+	UPDATES="$(echo "$ANS" | grep Updates | cut -d, -f2 | tr '\n' ' ' | sed 's/ $//')"
+	INSTALLS="$(echo "$ANS" | grep "New Install" | cut -d, -f2 | tr '\n' ' ' | sed 's/ $//')"
    echo
-   # If doing OS updates, aslo check for Fe-Pi and pulsaudio config file updates
-	[[ $OSUPDATES == "YES" ]] && UPDATES+=",fe-pi"
+   # If doing OS updates, also check for Fe-Pi and pulsaudio config file updates 
+	[[ $OSUPDATES == "YES" ]] && UPDATES+=" OS fe-pi"
    if [[ $UPDATES != "" ]]
 	then
       echo "Looking for updates to $UPDATES..."

@@ -16,7 +16,7 @@
 #
 #=========================================================================================
 
-VERSION="1.76.10"
+VERSION="1.76.11"
 
 GITHUB_URL="https://github.com"
 HAMLIB_LATEST_URL="$GITHUB_URL/Hamlib/Hamlib/releases/latest"
@@ -216,6 +216,11 @@ do
 		sudo mkdir -p $D
 		sudo chown $USER:$USER $D
 	fi	
+	# Make sure ownership is pi
+	if [[ $(stat -c '%U' $D) != "pi" || $(stat -c '%G' $D) != "pi" ]]
+	then
+		sudo chown -R $USER:$USER $D
+	fi	
 done
 
 for APP in $APPS
@@ -254,7 +259,7 @@ do
                   #sed 's/; autospawn = yes/autospawn = no/' < /etc/pulse/client.conf  > $HOME/.config/pulse/client.conf
                   sudo sed -i 's/^#deb-src/deb-src/' /etc/apt/sources.list
                   sudo sed -i 's/^#deb-src/deb-src/' /etc/apt/sources.list.d/raspi.list
-						sudo apt update || aptError "sudo apt update"
+						#sudo apt update || aptError "sudo apt update"
                   sudo apt-get build-dep -y fldigi || aptError "sudo apt-get build-dep -y fldigi"
                   sudo apt install -y synaptic pavucontrol libusb-1.0-0-dev libusb-1.0-doc || aptError "sudo apt install -y synaptic pavucontrol libusb-1.0-0-dev libusb-1.0-doc"
                   sudo apt autoremove -y || aptError "sudo apt autoremove -y"
@@ -734,7 +739,7 @@ EOF
          else
             echo "deb $PMON_REPO buster non-free" | sudo tee /etc/apt/sources.list.d/scs.list > /dev/null
             wget -q -O - ${PMON_REPO}scs.gpg.key | sudo apt-key add -
-            sudo apt update
+            #sudo apt update
             sudo apt install pmon || aptError "sudo apt install pmon"
          fi
       	[ -d "$HOME/pmon" ] && rm -rf pmon/
