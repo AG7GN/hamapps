@@ -3,7 +3,7 @@
 # YAD/shell script to install or update certain ham applications, as well as 
 # update Raspbian OS and apps.
 
-VERSION="1.76.16"
+VERSION="1.76.17"
 
 function Help () {
 	BROWSER="$(command -v chromium-browser)"
@@ -20,7 +20,7 @@ function Help () {
 	APPS[chirp]="https://chirp.danplanet.com/projects/chirp/wiki/Home"
 	APPS[wsjtx]="https://physics.princeton.edu/pulsar/K1JT/wsjtx.html"
 	APPS[xastir]="http://xastir.org/index.php/Main_Page"
-	APPS[hampi-backup-restore.sh]="https://github.com/AG7GN/hampi-backup-restore/blob/master/README.md"
+	APPS[nexus-backup-restore.sh]="https://github.com/AG7GN/nexus-backup-restore/blob/master/README.md"
 	APPS[hamapps]="https://github.com/AG7GN/hamapps/blob/master/README.md"
 	APPS[nexus-iptables]="https://github.com/AG7GN/nexus-iptables/blob/master/README.md"
 	APPS[hampi-utilities]="https://github.com/AG7GN/hampi-utilities/blob/master/README.md"
@@ -58,7 +58,7 @@ function GenerateList () {
 	declare -a CHECKED
 	CHECKED[0]="FALSE"
 	CHECKED[1]="TRUE"
-	LIST="710.sh arim autohotspot chirp direwolf flamp fldigi flmsg flrig flwrap hamapps hampi-backup-restore.sh nexus-iptables nexus-rmsgw hampi-utilities js8call linbpq pat piardop pmon wsjtx xastir"
+	LIST="710.sh arim autohotspot chirp direwolf flamp fldigi flmsg flrig flwrap hamapps nexus-backup-restore.sh nexus-iptables nexus-rmsgw hampi-utilities js8call linbpq pat piardop pmon wsjtx xastir"
 	declare -A DESC
 	DESC[710.sh]="Rig Control Script for Kenwood 710/71A"
 	DESC[arim]="Amateur Radio Instant Messaging"
@@ -71,7 +71,7 @@ function GenerateList () {
 	DESC[flrig]="Rig Control for Fldigi"
 	DESC[flwrap]="File Encapsulation for Fldigi"
 	DESC[hamapps]="Tool for Installing/Updating Apps"
-	DESC[hampi-backup-restore.sh]="Backup/Restore Home Folder"
+	DESC[nexus-backup-restore.sh]="Backup/Restore Home Folder"
 	DESC[nexus-iptables]="Firewall Rules for Nexus Image"
 	DESC[nexus-rmsgw]="RMS Gateway software for the Hampi Image"
 	DESC[hampi-utilities]="Scripts and Apps for Hampi Image"
