@@ -3,7 +3,7 @@
 # YAD/shell script to install or update certain ham applications, as well as 
 # update Raspbian OS and apps.
 
-VERSION="1.76.18"
+VERSION="1.76.19"
 
 function Help () {
 	BROWSER="$(command -v chromium-browser)"
@@ -23,7 +23,7 @@ function Help () {
 	APPS[nexus-backup-restore.sh]="https://github.com/AG7GN/nexus-backup-restore/blob/master/README.md"
 	APPS[hamapps]="https://github.com/AG7GN/hamapps/blob/master/README.md"
 	APPS[nexus-iptables]="https://github.com/AG7GN/nexus-iptables/blob/master/README.md"
-	APPS[hampi-utilities]="https://github.com/AG7GN/hampi-utilities/blob/master/README.md"
+	APPS[nexus-utilities]="https://github.com/AG7GN/nexus-utilities/blob/master/README.md"
 	APPS[autohotspot]="https://github.com/AG7GN/autohotspot/blob/master/README.md"
 	APPS[710.sh]="https://github.com/AG7GN/kenwood/blob/master/README.md"
 	APPS[pmon]="https://www.p4dragon.com/en/PMON.html"
@@ -58,7 +58,7 @@ function GenerateList () {
 	declare -a CHECKED
 	CHECKED[0]="FALSE"
 	CHECKED[1]="TRUE"
-	LIST="710.sh arim autohotspot chirp direwolf flamp fldigi flmsg flrig flwrap hamapps nexus-backup-restore.sh nexus-iptables nexus-rmsgw hampi-utilities js8call linbpq pat piardop pmon wsjtx xastir"
+	LIST="710.sh arim autohotspot chirp direwolf flamp fldigi flmsg flrig flwrap hamapps nexus-backup-restore.sh nexus-iptables nexus-rmsgw nexus-utilities js8call linbpq pat piardop pmon wsjtx xastir"
 	declare -A DESC
 	DESC[710.sh]="Rig Control Script for Kenwood 710/71A"
 	DESC[arim]="Amateur Radio Instant Messaging"
@@ -74,7 +74,7 @@ function GenerateList () {
 	DESC[nexus-backup-restore.sh]="Backup/Restore Home Folder"
 	DESC[nexus-iptables]="Firewall Rules for Nexus Image"
 	DESC[nexus-rmsgw]="RMS Gateway software for the Hampi Image"
-	DESC[hampi-utilities]="Scripts and Apps for Hampi Image"
+	DESC[nexus-utilities]="Scripts and Apps for Hampi Image"
 	DESC[js8call]="Weak signal keyboard to keyboard messaging using JS8"
 	DESC[linbpq]="G8BPQ AX25 Networking Package"
 	DESC[pat]="Winlink Email Client"
@@ -99,8 +99,8 @@ function GenerateList () {
 					echo -e "FALSE\n$A\n${DESC[$A]}\nNew Install" >> "$TFILE"
 				fi
 				;;
-			hampi-utilities)
-				if [ -s /usr/local/src/hampi/hampi-utilities.version ]
+			nexus-utilities)
+				if [ -s /usr/local/src/nexus/nexus-utilities.version ]
 				then
 					echo -e "${CHECKED[$1]}\n$A\n${DESC[$A]}\nInstalled - Check for Updates" >> "$TFILE" 
 				else
@@ -108,7 +108,7 @@ function GenerateList () {
 				fi
 				;;
 			nexus-rmsgw)
-				if [[ -s /usr/local/src/hampi/hampi-rmsgw.version || -s /usr/local/src/nexus/nexus-rmsgw.version ]]
+				if [[ -s /usr/local/src/nexus/nexus-rmsgw.version ]]
 				then
 					echo -e "${CHECKED[$1]}\n$A\n${DESC[$A]}\nInstalled - Check for Updates" >> "$TFILE" 
 				else

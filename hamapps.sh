@@ -16,7 +16,7 @@
 #
 #=========================================================================================
 
-VERSION="1.76.18"
+VERSION="1.76.19"
 
 GITHUB_URL="https://github.com"
 HAMLIB_LATEST_URL="$GITHUB_URL/Hamlib/Hamlib/releases/latest"
@@ -34,7 +34,7 @@ PIARDOP2_URL="http://www.cantab.net/users/john.wiseman/Downloads/Beta/piardop2"
 PAT_GIT_URL="$GITHUB_URL/la5nta/pat/releases"
 CHIRP_URL="https://trac.chirp.danplanet.com/chirp_daily/LATEST"
 HAMAPPS_GIT_URL="$GITHUB_URL/AG7GN/hamapps"
-HAMPIUTILS_GIT_URL="$GITHUB_URL/AG7GN/hampi-utilities"
+NEXUSUTILS_GIT_URL="$GITHUB_URL/AG7GN/nexus-utilities"
 IPTABLES_GIT_URL="$GITHUB_URL/AG7GN/nexus-iptables"
 AUTOHOTSPOT_GIT_URL="$GITHUB_URL/AG7GN/autohotspot"
 KENWOOD_GIT_URL="$GITHUB_URL/AG7GN/kenwood"
@@ -47,9 +47,8 @@ FEPI_GIT_URL="$GITHUB_URL/AG7GN/fe-pi"
 LINBPQ_URL="http://www.cantab.net/users/john.wiseman/Downloads/Beta/pilinbpq"
 LINBPQ_DOC="http://www.cantab.net/users/john.wiseman/Downloads/Beta/HTMLPages.zip"
 REBOOT="NO"
-SRC_DIR="/usr/local/src/hampi"
-NEW_SRC_DIR="/usr/local/src/nexus"
-SHARE_DIR="/usr/local/share/hampi"
+SRC_DIR="/usr/local/src/nexus"
+SHARE_DIR="/usr/local/share/nexus"
 
 export CXXFLAGS='-O2 -march=armv8-a -mtune=cortex-a53'
 export CFLAGS='-O2 -march=armv8-a -mtune=cortex-a53'
@@ -71,7 +70,7 @@ function Usage () {
    echo "Where:"
    echo "   <apps> is one or more apps, separated by comma, from this list:"
    echo "   fldigi,flmsg,flamp,flrig,flwrap,xastir,direwolf,wsjtx,arim,piardop,"
-   echo "   pat,linbpq,chirp,rigctl,hampi-backup-restore,hampi-iptables,autohotspot,710.sh"
+   echo "   pat,linbpq,chirp,rigctl,nexus-backup-restore,nexus-iptables,autohotspot,710.sh"
    echo
    echo "   Note that if you use \"upgrade\" and the app is not already installed,"
    echo "   this script will install it."
@@ -210,7 +209,7 @@ sudo apt install -y extra-xdg-menus bc dnsutils libgtk-3-bin jq moreutils || apt
 APPS="$(echo "${2,,}" | tr ',' '\n' | sort -u | xargs)" 
 
 # Make nexus source and share folders if necessary
-for D in $SRC_DIR $NEW_SRC_DIR $SHARE_DIR
+for D in $SRC_DIR $SHARE_DIR
 do
 	if [[ ! -d $D ]]
 	then
@@ -551,41 +550,42 @@ EOF
      		[ -f $HOME/.local/share/applications/updatepi.desktop ] && rm -f $HOME/.local/share/applications/updatepi.desktop
       	rm -rf hamapps/
       	;;
-      hampi-utilities)
-      	echo "========= hampi-utilities install/update requested ========"
- 			VERSION_FILE_URL="https://raw.githubusercontent.com/AG7GN/hampi-utilities/master/hampi-utilities.version"
-      	wget -qO /tmp/hampi-utilities.version $VERSION_FILE_URL || { echo >&2 "======= $VERSION_FILE_URL download failed with $? ========"; exit 1; }
-      	if [ -s $SRC_DIR/hampi-utilities.version ]
+      nexus-utilities)
+      	echo "========= nexus-utilities install/update requested ========"
+ 			VERSION_FILE_URL="https://raw.githubusercontent.com/AG7GN/nexus-utilities/master/nexus-utilities.version"
+      	wget -qO /tmp/nexus-utilities.version $VERSION_FILE_URL || { echo >&2 "======= $VERSION_FILE_URL download failed with $? ========"; exit 1; }
+      	if [ -s $SRC_DIR/nexus-utilities.version ]
 			then
-				INSTALLED_VER="$(grep -i "^VERSION" $SRC_DIR/hampi-utilities.version)"
+				INSTALLED_VER="$(grep -i "^VERSION" $SRC_DIR/nexus-utilities.version)"
 			else
 			   INSTALLED_VER="NONE"
 			fi
-			LATEST_VER="$(grep -i "^VERSION" /tmp/hampi-utilities.version)"
+			LATEST_VER="$(grep -i "^VERSION" /tmp/nexus-utilities.version)"
 			echo "INSTALLED: $INSTALLED_VER   LATEST: $LATEST_VER"
 			if [[ $INSTALLED_VER == $LATEST_VER ]]
 			then
-				echo "============= hampi-utilities are up to date ============="
+				echo "============= nexus-utilities are up to date ============="
 			else
 				cd $SRC_DIR
-      		[ -d "$SRC_DIR/hampi-utilities" ] && rm -rf hamp-utilities/
+      		[ -d "$SRC_DIR/hampi-utilities" ] && rm -rf hampi-utilities/
+      		[ -d "$SRC_DIR/nexus-utilities" ] && rm -rf nexus-utilities/
       		git clone $HAMPIUTILS_GIT_URL || { echo >&2 "======= git clone $HAMPIUTILS_GIT_URL failed ========"; exit 1; }
-      		sudo chown $USER:$USER hampi-utilities/*
-      		chmod +x hampi-utilities/*.sh
-      		cp -f hampi-utilities/hampi-utilities.version $SRC_DIR/
-      		cp -f hampi-utilities/*.conf $SRC_DIR/
-      		cp -f hampi-utilities/*.html $SHARE_DIR/
-      		cp -f hampi-utilities/*.jpg $HOME/Pictures/
-      		cp -f hampi-utilities/*.example $HOME/
-      		sudo cp -f hampi-utilities/*.sh /usr/local/bin/
-      		sudo cp -f hampi-utilities/*.py /usr/local/bin/
-      		sudo cp -f hampi-utilities/*.desktop /usr/local/share/applications/
-      		sudo cp -f hampi-utilities/*.template /usr/local/share/applications/
-	     		rm -rf hampi-utilities/
-	      	echo "============= hampi-utilities installed =============="
+      		sudo chown $USER:$USER nexus-utilities/*
+      		chmod +x nexus-utilities/*.sh
+      		cp -f nexus-utilities/nexus-utilities.version $SRC_DIR/
+      		cp -f nexus-utilities/*.conf $SRC_DIR/
+      		cp -f nexus-utilities/*.html $SHARE_DIR/
+      		cp -f nexus-utilities/*.jpg $HOME/Pictures/
+      		cp -f nexus-utilities/*.example $HOME/
+      		sudo cp -f nexus-utilities/*.sh /usr/local/bin/
+      		sudo cp -f nexus-utilities/*.py /usr/local/bin/
+      		sudo cp -f nexus-utilities/*.desktop /usr/local/share/applications/
+      		sudo cp -f nexus-utilities/*.template /usr/local/share/applications/
+	     		rm -rf nexus-utilities/
+	      	echo "============= nexus-utilities installed =============="
 	     		REBOOT="YES"
 			fi
-     		rm -f /tmp/hampi-utilities.version
+     		rm -f /tmp/nexus-utilities.version
       	;;
       fe-pi)
       	echo "========= fe-pi pulseaudio install/update requested ========"
@@ -763,9 +763,9 @@ EOF
       	echo "============= nexus-rmsgw install/update requested ========"
 			VERSION_FILE_URL="https://raw.githubusercontent.com/AG7GN/rmsgw/master/nexus-rmsgw.version"
       	wget -qO /tmp/nexus-rmsgw.version $VERSION_FILE_URL || { echo >&2 "======= $VERSION_FILE_URL download failed with $? ========"; exit 1; }
-      	if [ -s $NEW_SRC_DIR/nexus-rmsgw.version ]
+      	if [ -s $SRC_DIR/nexus-rmsgw.version ]
 			then
-				INSTALLED_VER="$(grep -i "^VERSION" $NEW_SRC_DIR/nexus-rmsgw.version)"
+				INSTALLED_VER="$(grep -i "^VERSION" $SRC_DIR/nexus-rmsgw.version)"
 			else
 			   INSTALLED_VER="NONE"
 			fi
@@ -775,12 +775,12 @@ EOF
 			then
 				echo "============= nexus-rmsgw is up to date ============="
 			else
-				cd $NEW_SRC_DIR
-	      	[ -d "$NEW_SRC_DIR/rmsgw" ] && rm -rf rmsgw/
+				cd $SRC_DIR
+	      	[ -d "$SRC_DIR/rmsgw" ] && rm -rf rmsgw/
 				git clone $NEXUS_RMSGW_GIT_URL || { echo >&2 "======= git clone $NEXUS_RMSGW_GIT_URL failed ========"; exit 1; }
 				cd rmsgw
 				./install-rmsgw.sh
-				cp -f nexus-rmsgw.version $NEW_SRC_DIR/
+				cp -f nexus-rmsgw.version $SRC_DIR/
 	      	echo "============= nexus-utilities installed =============="
 			fi
 			rm -f /tmp/nexus-rmsgw.version
