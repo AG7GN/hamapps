@@ -6,7 +6,7 @@
 #
 # Description:    This script will install or update common ham radio 
 #                 applications on a Raspberry Pi running the standard Raspbian image.
-#                 It has been tested on Buster only.  Use version 1.29 for Stretch.
+#                 It has been tested on Buster only.  
 #
 # Usage           hampapps.sh install|upgrade <application(s)>
 #                  
@@ -16,7 +16,7 @@
 #
 #=========================================================================================
 
-VERSION="1.76.15"
+VERSION="1.76.16"
 
 GITHUB_URL="https://github.com"
 HAMLIB_LATEST_URL="$GITHUB_URL/Hamlib/Hamlib/releases/latest"
@@ -35,10 +35,10 @@ PAT_GIT_URL="$GITHUB_URL/la5nta/pat/releases"
 CHIRP_URL="https://trac.chirp.danplanet.com/chirp_daily/LATEST"
 HAMAPPS_GIT_URL="$GITHUB_URL/AG7GN/hamapps"
 HAMPIUTILS_GIT_URL="$GITHUB_URL/AG7GN/hampi-utilities"
-IPTABLES_GIT_URL="$GITHUB_URL/AG7GN/hampi-iptables"
+IPTABLES_GIT_URL="$GITHUB_URL/AG7GN/nexus-iptables"
 AUTOHOTSPOT_GIT_URL="$GITHUB_URL/AG7GN/autohotspot"
 KENWOOD_GIT_URL="$GITHUB_URL/AG7GN/kenwood"
-HAMPI_BU_RS_GIT_URL="$GITHUB_URL/AG7GN/hampi-backup-restore"
+NEXUS_BU_RS_GIT_URL="$GITHUB_URL/AG7GN/nexus-backup-restore"
 PMON_REPO="https://www.scs-ptc.com/repo/packages/"
 PMON_GIT_URL="$GITHUB_URL/AG7GN/pmon"
 HAMPIRMSGW_GIT_URL="$GITHUB_URL/AG7GN/rmsgw"
@@ -646,24 +646,26 @@ EOF
 			fi
       	rm -rf autohotspot/
       	;;
-      hampi-backup-restore*)
-      	echo "============= hampi-backup-restore install/update requested ========"
+      nexus-backup-restore*)
+      	echo "============= nexus-backup-restore install/update requested ========"
       	cd $HOME
-      	[ -d "$HOME/hampi-backup-restore" ] && rm -rf hampi-backup-restore/
-      	git clone $HAMPI_BU_RS_GIT_URL || { echo >&2 "======= git clone $HAMPI_BU_RS_GIT_URL failed ========"; exit 1; }
-			INSTALLED_VER="$(grep -i "^VERSION" /usr/local/bin/hampi-backup-restore.sh)"
-			LATEST_VER="$(grep -i "^VERSION" hampi-backup-restore/hampi-backup-restore.sh)"
+      	[ -d "$HOME/nexus-backup-restore" ] && rm -rf nexus-backup-restore/
+      	git clone $NEXUS_BU_RS_GIT_URL || { echo >&2 "======= git clone $NEXUS_BU_RS_GIT_URL failed ========"; exit 1; }
+			INSTALLED_VER="$(grep -i "^VERSION" /usr/local/bin/nexus-backup-restore.sh)"
+			LATEST_VER="$(grep -i "^VERSION" nexus-backup-restore/nexus-backup-restore.sh)"
 			if [[ $INSTALLED_VER == $LATEST_VER ]]
 			then
-				echo "============= hampi-backup-restore is up to date ============="
+				echo "============= nexus-backup-restore is up to date ============="
 			else
-      		sudo cp hampi-backup-restore/hampi-backup-restore.sh /usr/local/bin/
-      		sudo cp hampi-backup-restore/hampi-backup-restore.desktop /usr/local/share/applications/
+				sudo rm -f /usr/local/bin/hampi-backup-restore.sh
+      		sudo cp nexus-backup-restore/nexus-backup-restore.sh /usr/local/bin/
+      		sudo rm -f /usr/local/share/applications/hampi-backup-restore.desktop
+      		sudo cp nexus-backup-restore/nexus-backup-restore.desktop /usr/local/share/applications/
       		[ -f $HOME/.local/share/applications/hampi-backup-restore.desktop ] && rm -f $HOME/.local/share/applications/hampi-backup-restore.desktop
-	      	echo "============= hampi-backup-restore installed =============="
+	      	echo "============= nexus-backup-restore installed =============="
 	     		REBOOT="YES"
 			fi
-      	rm -rf hampi-backup-restore/
+      	rm -rf nexus-backup-restore/
       	;;
       710*)
       	echo "============= 710.sh install/update requested ========"
@@ -681,25 +683,25 @@ EOF
 			fi
       	rm -rf kenwood/
       	;;
-      hampi-iptables)
+      nexus-iptables)
       	echo "============= hampi-iptables install/update requested ============="
       	cd $HOME
-      	[ -d "$HOME/hampi-iptables" ] && rm -rf hampi-iptables/
+      	[ -d "$HOME/nexus-iptables" ] && rm -rf nexus-iptables/
       	git clone $IPTABLES_GIT_URL || { echo >&2 "======= git clone $IPTABLES_GIT_URL failed ========"; exit 1; }
      		INSTALLED_VER="$(head -n1 /etc/iptables/rules.v4)"
-     		LATEST_VER="$(head -n1 hampi-iptables/rules.v4)"
+     		LATEST_VER="$(head -n1 nexus-iptables/rules.v4)"
       	if [ -s /etc/iptables/rules.v4 ] && [[ $INSTALLED_VER == $LATEST_VER ]]
       	then
      			echo "============= hampi-iptables is up to date ============="
 			else      			
       		sudo cp /etc/iptables/rules.v4 /etc/iptables/rules.v4.previous
       		sudo cp /etc/iptables/rules.v6 /etc/iptables/rules.v6.previous
-      		sudo cp -f hampi-iptables/rules.v? /etc/iptables/
+      		sudo cp -f nexus-iptables/rules.v? /etc/iptables/
       		sudo iptables-restore < /etc/iptables/rules.v4
       		sudo ip6tables-restore < /etc/iptables/rules.v6
       		echo "============= hampi-iptables installed ================="
       	fi
-     		rm -rf hampi-iptables/
+     		rm -rf nexus-iptables/
       	;;
       chirp*)
          cd $HOME

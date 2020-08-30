@@ -3,7 +3,7 @@
 # YAD/shell script to install or update certain ham applications, as well as 
 # update Raspbian OS and apps.
 
-VERSION="1.76.15"
+VERSION="1.76.16"
 
 function Help () {
 	BROWSER="$(command -v chromium-browser)"
@@ -22,12 +22,12 @@ function Help () {
 	APPS[xastir]="http://xastir.org/index.php/Main_Page"
 	APPS[hampi-backup-restore.sh]="https://github.com/AG7GN/hampi-backup-restore/blob/master/README.md"
 	APPS[hamapps]="https://github.com/AG7GN/hamapps/blob/master/README.md"
-	APPS[hampi-iptables]="https://github.com/AG7GN/hampi-iptables/blob/master/README.md"
+	APPS[nexus-iptables]="https://github.com/AG7GN/nexus-iptables/blob/master/README.md"
 	APPS[hampi-utilities]="https://github.com/AG7GN/hampi-utilities/blob/master/README.md"
 	APPS[autohotspot]="https://github.com/AG7GN/autohotspot/blob/master/README.md"
 	APPS[710.sh]="https://github.com/AG7GN/kenwood/blob/master/README.md"
 	APPS[pmon]="https://www.p4dragon.com/en/PMON.html"
-	APPS[hampi-rmsgw]="https://github.com/AG7GN/rmsgw/blob/master/README.md"
+	APPS[nexus-rmsgw]="https://github.com/AG7GN/rmsgw/blob/master/README.md"
 	APPS[js8call]="http://js8call.com"
 	APPS[linbpq]="http://www.cantab.net/users/john.wiseman/Documents/InstallingLINBPQ.html"
 	APP="$2"
@@ -58,7 +58,7 @@ function GenerateList () {
 	declare -a CHECKED
 	CHECKED[0]="FALSE"
 	CHECKED[1]="TRUE"
-	LIST="710.sh arim autohotspot chirp direwolf flamp fldigi flmsg flrig flwrap hamapps hampi-backup-restore.sh hampi-iptables hampi-rmsgw hampi-utilities js8call linbpq pat piardop pmon wsjtx xastir"
+	LIST="710.sh arim autohotspot chirp direwolf flamp fldigi flmsg flrig flwrap hamapps hampi-backup-restore.sh nexus-iptables nexus-rmsgw hampi-utilities js8call linbpq pat piardop pmon wsjtx xastir"
 	declare -A DESC
 	DESC[710.sh]="Rig Control Script for Kenwood 710/71A"
 	DESC[arim]="Amateur Radio Instant Messaging"
@@ -72,8 +72,8 @@ function GenerateList () {
 	DESC[flwrap]="File Encapsulation for Fldigi"
 	DESC[hamapps]="Tool for Installing/Updating Apps"
 	DESC[hampi-backup-restore.sh]="Backup/Restore Home Folder"
-	DESC[hampi-iptables]="Firewall Rules for Hampi Image"
-	DESC[hampi-rmsgw]="RMS Gateway software for the Hampi Image"
+	DESC[nexus-iptables]="Firewall Rules for Nexus Image"
+	DESC[nexus-rmsgw]="RMS Gateway software for the Hampi Image"
 	DESC[hampi-utilities]="Scripts and Apps for Hampi Image"
 	DESC[js8call]="Weak signal keyboard to keyboard messaging using JS8"
 	DESC[linbpq]="G8BPQ AX25 Networking Package"
@@ -88,7 +88,7 @@ function GenerateList () {
 	for A in $LIST 
 	do 
 		case $A in
-			hampi-iptables|autohotspot)
+			nexus-iptables|autohotspot)
 				echo -e "${CHECKED[$1]}\n$A\n${DESC[$A]}\nInstalled - Check for Updates" >> "$TFILE" 
 				;;
 			chirp)
