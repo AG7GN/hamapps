@@ -223,6 +223,10 @@ do
 	fi	
 done
 
+# Remove old hampi src folder
+rm -rf /usr/local/src/hampi
+rm -rf /usr/local/share/hampi
+
 for APP in $APPS
 do
    case $APP in
