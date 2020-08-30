@@ -16,7 +16,7 @@
 #
 #=========================================================================================
 
-VERSION="1.76.17"
+VERSION="1.76.18"
 
 GITHUB_URL="https://github.com"
 HAMLIB_LATEST_URL="$GITHUB_URL/Hamlib/Hamlib/releases/latest"
@@ -41,13 +41,14 @@ KENWOOD_GIT_URL="$GITHUB_URL/AG7GN/kenwood"
 NEXUS_BU_RS_GIT_URL="$GITHUB_URL/AG7GN/nexus-backup-restore"
 PMON_REPO="https://www.scs-ptc.com/repo/packages/"
 PMON_GIT_URL="$GITHUB_URL/AG7GN/pmon"
-HAMPIRMSGW_GIT_URL="$GITHUB_URL/AG7GN/rmsgw"
+NEXUS_RMSGW_GIT_URL="$GITHUB_URL/AG7GN/rmsgw"
 JS8CALL_URL="http://files.js8call.com/latest.html"
 FEPI_GIT_URL="$GITHUB_URL/AG7GN/fe-pi"
 LINBPQ_URL="http://www.cantab.net/users/john.wiseman/Downloads/Beta/pilinbpq"
 LINBPQ_DOC="http://www.cantab.net/users/john.wiseman/Downloads/Beta/HTMLPages.zip"
 REBOOT="NO"
 SRC_DIR="/usr/local/src/hampi"
+NEW_SRC_DIR="/usr/local/src/nexus"
 SHARE_DIR="/usr/local/share/hampi"
 
 export CXXFLAGS='-O2 -march=armv8-a -mtune=cortex-a53'
@@ -208,8 +209,8 @@ sudo apt install -y extra-xdg-menus bc dnsutils libgtk-3-bin jq moreutils || apt
 
 APPS="$(echo "${2,,}" | tr ',' '\n' | sort -u | xargs)" 
 
-# Make hampi source and share folders if necessary
-for D in $SRC_DIR $SHARE_DIR
+# Make nexus source and share folders if necessary
+for D in $SRC_DIR $NEW_SRC_DIR $SHARE_DIR
 do
 	if [[ ! -d $D ]]
 	then
@@ -684,7 +685,7 @@ EOF
       	rm -rf kenwood/
       	;;
       nexus-iptables)
-      	echo "============= hampi-iptables install/update requested ============="
+      	echo "============= nexus-iptables install/update requested ============="
       	cd $HOME
       	[ -d "$HOME/nexus-iptables" ] && rm -rf nexus-iptables/
       	git clone $IPTABLES_GIT_URL || { echo >&2 "======= git clone $IPTABLES_GIT_URL failed ========"; exit 1; }
@@ -692,14 +693,14 @@ EOF
      		LATEST_VER="$(head -n1 nexus-iptables/rules.v4)"
       	if [ -s /etc/iptables/rules.v4 ] && [[ $INSTALLED_VER == $LATEST_VER ]]
       	then
-     			echo "============= hampi-iptables is up to date ============="
+     			echo "============= nexus-iptables is up to date ============="
 			else      			
       		sudo cp /etc/iptables/rules.v4 /etc/iptables/rules.v4.previous
       		sudo cp /etc/iptables/rules.v6 /etc/iptables/rules.v6.previous
       		sudo cp -f nexus-iptables/rules.v? /etc/iptables/
       		sudo iptables-restore < /etc/iptables/rules.v4
       		sudo ip6tables-restore < /etc/iptables/rules.v6
-      		echo "============= hampi-iptables installed ================="
+      		echo "============= nexus-iptables installed ================="
       	fi
      		rm -rf nexus-iptables/
       	;;
@@ -758,31 +759,31 @@ EOF
       	fi
      		rm -rf pmon/
      		;;
-     	hampi-rmsgw)
-      	echo "============= hampi-rmsgw install/update requested ========"
-			VERSION_FILE_URL="https://raw.githubusercontent.com/AG7GN/rmsgw/master/hampi-rmsgw.version"
-      	wget -qO /tmp/hampi-rmsgw.version $VERSION_FILE_URL || { echo >&2 "======= $VERSION_FILE_URL download failed with $? ========"; exit 1; }
-      	if [ -s $SRC_DIR/hampi-rmsgw.version ]
+     	nexus-rmsgw)
+      	echo "============= nexus-rmsgw install/update requested ========"
+			VERSION_FILE_URL="https://raw.githubusercontent.com/AG7GN/rmsgw/master/nexus-rmsgw.version"
+      	wget -qO /tmp/nexus-rmsgw.version $VERSION_FILE_URL || { echo >&2 "======= $VERSION_FILE_URL download failed with $? ========"; exit 1; }
+      	if [ -s $NEW_SRC_DIR/nexus-rmsgw.version ]
 			then
-				INSTALLED_VER="$(grep -i "^VERSION" $SRC_DIR/hampi-rmsgw.version)"
+				INSTALLED_VER="$(grep -i "^VERSION" $NEW_SRC_DIR/nexus-rmsgw.version)"
 			else
 			   INSTALLED_VER="NONE"
 			fi
-			LATEST_VER="$(grep -i "^VERSION" /tmp/hampi-rmsgw.version)"
+			LATEST_VER="$(grep -i "^VERSION" /tmp/nexus-rmsgw.version)"
 			echo "INSTALLED: $INSTALLED_VER   LATEST: $LATEST_VER"
 			if [[ $INSTALLED_VER == $LATEST_VER ]]
 			then
-				echo "============= hampi-rmsgw is up to date ============="
+				echo "============= nexus-rmsgw is up to date ============="
 			else
-				cd $SRC_DIR
-	      	[ -d "$SRC_DIR/rmsgw" ] && rm -rf rmsgw/
-				git clone $HAMPIRMSGW_GIT_URL || { echo >&2 "======= git clone $HAMPIRMSGW_GIT_URL failed ========"; exit 1; }
+				cd $NEW_SRC_DIR
+	      	[ -d "$NEW_SRC_DIR/rmsgw" ] && rm -rf rmsgw/
+				git clone $NEXUS_RMSGW_GIT_URL || { echo >&2 "======= git clone $NEXUS_RMSGW_GIT_URL failed ========"; exit 1; }
 				cd rmsgw
 				./install-rmsgw.sh
-				cp -f hampi-rmsgw.version $SRC_DIR/
-	      	echo "============= hampi-utilities installed =============="
+				cp -f nexus-rmsgw.version $NEW_SRC_DIR/
+	      	echo "============= nexus-utilities installed =============="
 			fi
-			rm -f /tmp/hampi-rmsgw.version
+			rm -f /tmp/nexus-rmsgw.version
      		;;
      	js8call)
      		echo "============= $APP install/update requested ========"
