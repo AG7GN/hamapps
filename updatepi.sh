@@ -3,7 +3,7 @@
 # YAD/shell script to install or update certain ham applications, as well as 
 # update Raspbian OS and apps.
 
-VERSION="1.76.19"
+VERSION="1.76.20"
 
 function Help () {
 	BROWSER="$(command -v chromium-browser)"
@@ -73,8 +73,8 @@ function GenerateList () {
 	DESC[hamapps]="Tool for Installing/Updating Apps"
 	DESC[nexus-backup-restore.sh]="Backup/Restore Home Folder"
 	DESC[nexus-iptables]="Firewall Rules for Nexus Image"
-	DESC[nexus-rmsgw]="RMS Gateway software for the Hampi Image"
-	DESC[nexus-utilities]="Scripts and Apps for Hampi Image"
+	DESC[nexus-rmsgw]="RMS Gateway software for the Nexus Image"
+	DESC[nexus-utilities]="Scripts and Apps for Nexus Image"
 	DESC[js8call]="Weak signal keyboard to keyboard messaging using JS8"
 	DESC[linbpq]="G8BPQ AX25 Networking Package"
 	DESC[pat]="Winlink Email Client"

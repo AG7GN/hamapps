@@ -16,7 +16,7 @@
 #
 #=========================================================================================
 
-VERSION="1.76.19"
+VERSION="1.76.20"
 
 GITHUB_URL="https://github.com"
 HAMLIB_LATEST_URL="$GITHUB_URL/Hamlib/Hamlib/releases/latest"
@@ -573,7 +573,7 @@ EOF
 				cd $SRC_DIR
       		[ -d "$SRC_DIR/hampi-utilities" ] && rm -rf hampi-utilities/
       		[ -d "$SRC_DIR/nexus-utilities" ] && rm -rf nexus-utilities/
-      		git clone $HAMPIUTILS_GIT_URL || { echo >&2 "======= git clone $HAMPIUTILS_GIT_URL failed ========"; exit 1; }
+      		git clone $NEXUSUTILS_GIT_URL || { echo >&2 "======= git clone $NEXUSUTILS_GIT_URL failed ========"; exit 1; }
       		sudo chown $USER:$USER nexus-utilities/*
       		chmod +x nexus-utilities/*.sh
       		cp -f nexus-utilities/nexus-utilities.version $SRC_DIR/
