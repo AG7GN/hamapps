@@ -3,7 +3,7 @@
 # YAD/shell script to install or update certain ham applications, as well as 
 # update Raspbian OS and apps.
 
-VERSION="1.77.0"
+VERSION="1.77.1"
 
 function Help () {
 	BROWSER="$(command -v chromium-browser)"
@@ -208,6 +208,17 @@ then
 		REBOOT="YES"
 	fi
 fi
+
+# Change /boot/hampi.txt to nexus.txt
+if [ -s /boot/hampi.txt ]
+then
+	sudo sed -i "s/HAMPI_RELEASE/NEXUS_VERSION/" /boot/hampi.txt
+	sudo mv /boot/hampi.txt /boot/nexus.txt
+	sudo rm -f /boot/hampi.txt*
+fi
+# Nexus versions of the following are now installed via nexus-utilities
+sudo rm -f /usr/local/bin/hampi-release.sh
+sudo rm -f /usr/local/share/applications/hampi-version.desktop
 
 RESULT=2
 # Initially generate app list with pick boxes for installed apps not checked
