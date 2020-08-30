@@ -3,7 +3,7 @@
 # YAD/shell script to install or update certain ham applications, as well as 
 # update Raspbian OS and apps.
 
-VERSION="1.76.20"
+VERSION="1.76.21"
 
 function Help () {
 	BROWSER="$(command -v chromium-browser)"
@@ -104,7 +104,7 @@ function GenerateList () {
 				then
 					echo -e "${CHECKED[$1]}\n$A\n${DESC[$A]}\nInstalled - Check for Updates" >> "$TFILE" 
 				else
-					echo -e "FALSE\n$A\nNew Install" >> "$TFILE"
+					echo -e "FALSE\n$A\n${DESC[$A]}\nNew Install" >> "$TFILE"
 				fi
 				;;
 			nexus-rmsgw)
