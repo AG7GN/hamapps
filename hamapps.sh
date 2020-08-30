@@ -16,7 +16,7 @@
 #
 #=========================================================================================
 
-VERSION="1.76.21"
+VERSION="1.77.0"
 
 GITHUB_URL="https://github.com"
 HAMLIB_LATEST_URL="$GITHUB_URL/Hamlib/Hamlib/releases/latest"
@@ -224,8 +224,8 @@ do
 done
 
 # Remove old hampi src folder
-rm -rf /usr/local/src/hampi
-rm -rf /usr/local/share/hampi
+sudo rm -rf /usr/local/src/hampi
+sudo rm -rf /usr/local/share/hampi
 
 for APP in $APPS
 do
