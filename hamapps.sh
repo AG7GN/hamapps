@@ -232,16 +232,16 @@ do
    case $APP in
       fldigi|flamp|flmsg|flrig|flwrap)
          cd $HOME
-         if ls $HOME/.local/share/applications/${APP}*.desktop 1> /dev/null 2>&1
-			then
-            sed -i 's|\/home\/pi\/trim|\/usr\/local\/bin\/trim|' $HOME/.local/share/applications/${APP}*.desktop
-            sudo mv -f $HOME/.local/share/applications/${APP}*.desktop /usr/local/share/applications/
-            sudo mv -f $HOME/trim*.sh /usr/local/bin/		  
-			fi		  
-			if ls $HOME/.local/share/applications/flarq*.desktop 1> /dev/null 2>&1
-			then
-            sudo mv -f $HOME/.local/share/applications/flarq*.desktop /usr/local/share/applications/
-			fi
+         #if ls $HOME/.local/share/applications/${APP}*.desktop 1> /dev/null 2>&1
+			#then
+         #   sed -i 's|\/home\/pi\/trim|\/usr\/local\/bin\/trim|' $HOME/.local/share/applications/${APP}*.desktop
+         #   sudo mv -f $HOME/.local/share/applications/${APP}*.desktop /usr/local/share/applications/
+         #   sudo mv -f $HOME/trim*.sh /usr/local/bin/		  
+			#fi		  
+			#if ls $HOME/.local/share/applications/flarq*.desktop 1> /dev/null 2>&1
+			#then
+         #   sudo mv -f $HOME/.local/share/applications/flarq*.desktop /usr/local/share/applications/
+			#fi
          FILE=""
          rm -f $APP.list
          echo "========= Downloading ${FLROOT_URL}$APP =========="
@@ -398,13 +398,13 @@ EOF
 			LATEST_VER="$(cat src/version.h | grep -m1 -i version | sed 's/[^0-9.]//g')"
 			INSTALLED_VER="$(direwolf --version 2>/dev/null | grep -m1 -i "version" | sed 's/(.*)//g;s/[^0-9.]//g')"
 			[[ $INSTALLED_VER == "" ]] && INSTALLED_VER=0
-		   if ls $HOME/.local/share/applications/direwolf*.desktop 1> /dev/null 2>&1
-         then
-            [ -f /usr/local/share/applications/direwolf.desktop ] && sudo mv -f /usr/local/share/applications/direwolf.desktop /usr/local/share/applications/direwolf.desktop.disabled
-            [ -f $HOME/direwolf.conf ] && mv $HOME/direwolf.conf $HOME/direwolf.conf.original
-            sed -i 's|\/home\/pi\/d|\/usr\/local\/bin\/d|' $HOME/.local/share/applications/direwolf*.desktop
-				sudo mv -f $HOME/.local/share/applications/direwolf*.desktop /usr/local/share/applications/
-         fi
+		   #if ls $HOME/.local/share/applications/direwolf*.desktop 1> /dev/null 2>&1
+         #then
+         #   [ -f /usr/local/share/applications/direwolf.desktop ] && sudo mv -f /usr/local/share/applications/direwolf.desktop /usr/local/share/applications/direwolf.desktop.disabled
+         #   [ -f $HOME/direwolf.conf ] && mv $HOME/direwolf.conf $HOME/direwolf.conf.original
+         #   sed -i 's|\/home\/pi\/d|\/usr\/local\/bin\/d|' $HOME/.local/share/applications/direwolf*.desktop
+			#	sudo mv -f $HOME/.local/share/applications/direwolf*.desktop /usr/local/share/applications/
+         #fi
 			if (( $(echo "$INSTALLED_VER >= $LATEST_VER" | bc -l) ))
 			then
 				echo "========= Direwolf is already at latest version $LATEST_VER ==========="
