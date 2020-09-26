@@ -3,7 +3,7 @@
 # YAD/shell script to install or update certain ham applications, as well as 
 # update Raspbian OS and apps.
 
-VERSION="1.77.1"
+VERSION="1.77.2"
 
 function Help () {
 	BROWSER="$(command -v chromium-browser)"
@@ -292,7 +292,7 @@ else
       echo "Checking for regular Raspberry Pi OS updates..."
 		echo
       sudo apt update
-      sudo apt -m -y full-upgrade && echo -e "\n\n=========== Raspbian OS Update Finished ==========="
+      sudo apt -m -y upgrade && echo -e "\n\n=========== Raspbian OS Update Finished ==========="
       # Make sure pulseaudio is not default sound device.  If pulseaudio is updated,
       # it might restore this file and make pulseaudio the default sound interface.
       # So, we make sure every nonempty line is commented out.
