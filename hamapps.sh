@@ -16,7 +16,7 @@
 #
 #=========================================================================================
 
-VERSION="1.77.2"
+VERSION="1.77.3"
 
 GITHUB_URL="https://github.com"
 HAMLIB_LATEST_URL="$GITHUB_URL/Hamlib/Hamlib/releases/latest"
@@ -24,8 +24,6 @@ FLROOT_URL="http://www.w1hkj.com/files/"
 WSJTX_KEY_URL="https://keyserver.ubuntu.com/pks/lookup?op=get&search=0xB5E1FEF627613D4957BA72885794D54C862549F9"
 WSJTX_URL="http://www.physics.princeton.edu/pulsar/k1jt/wsjtx.html"
 DIREWOLF_GIT_URL="$GITHUB_URL/wb2osz/direwolf"
-DIREWOLF_LATEST="$DIREWOLF_GIT_URL/archive/dev.zip"
-#DIREWOLF_LATEST="$DIREWOLF_GIT_URL/releases/latest"
 XASTIR_GIT_URL="$GITHUB_URL/Xastir/Xastir.git"
 ARIM_URL="https://www.whitemesa.net/arim/arim.html"
 GARIM_URL="https://www.whitemesa.net/garim/garim.html"
@@ -387,60 +385,43 @@ EOF
 			;;	
       direwolf)
          cd $HOME
-			#DIREWOLF_LATEST_VER="$(wget -q -O - $DIREWOLF_LATEST | grep .tar.gz | grep "<a href" | cut -d'"' -f2)"
-			#[[ $DIREWOLF_LATEST_VER == "" ]] && { echo >&2 "======= Failed to locate tar.gz file in $DIREWOLF_LATEST ========"; exit 1; }
-			#DIREWOLF_LATEST_VER="${GITHUB_URL}${DIREWOLF_LATEST_VER}"
-			mkdir -p direwolf
+			# Check prerequisites
+			sudo apt -y install git gcc g++ make cmake libasound2-dev libudev-dev || aptError "sudo apt -y install git gcc g++ make cmake libasound2-dev libudev-dev"
+			rm -rf direwolf
+			git clone ${DIREWOLF_GIT_URL} || { echo >&2 "======= git clone $DIREWOLF_GIT_URL failed ========"; exit 1; }
 			cd direwolf
-			wget -q -O dev.zip $DIREWOLF_LATEST || { echo >&2 "======= $DIREWOLF_LATEST_VER download failed with $? ========"; exit 1; }
-			unzip -o dev.zip
-			cd $(ls -td dire* | head -1)
-			LATEST_VER="$(cat src/version.h | grep -m1 -i version | sed 's/[^0-9.]//g')"
+			LATEST_VER="$(grep -m1 -i version src/version.h | sed 's/[^0-9.]//g')"
 			INSTALLED_VER="$(direwolf --version 2>/dev/null | grep -m1 -i "version" | sed 's/(.*)//g;s/[^0-9.]//g')"
-			[[ $INSTALLED_VER == "" ]] && INSTALLED_VER=0
-		   #if ls $HOME/.local/share/applications/direwolf*.desktop 1> /dev/null 2>&1
-         #then
-         #   [ -f /usr/local/share/applications/direwolf.desktop ] && sudo mv -f /usr/local/share/applications/direwolf.desktop /usr/local/share/applications/direwolf.desktop.disabled
-         #   [ -f $HOME/direwolf.conf ] && mv $HOME/direwolf.conf $HOME/direwolf.conf.original
-         #   sed -i 's|\/home\/pi\/d|\/usr\/local\/bin\/d|' $HOME/.local/share/applications/direwolf*.desktop
-			#	sudo mv -f $HOME/.local/share/applications/direwolf*.desktop /usr/local/share/applications/
-         #fi
-			if (( $(echo "$INSTALLED_VER >= $LATEST_VER" | bc -l) ))
+			[[ $INSTALLED_VER == "" || -f /usr/bin/direwolf ]] && INSTALLED_VER=0  # Development versions were installed in /usr/bin
+			[ -f /usr/bin/direwolf ] && sudo rm -f /usr/bin/direwolf # Remove older dev version
+			#if (( $(echo "$INSTALLED_VER >= $LATEST_VER" | bc -l) ))
+			if [[ $INSTALLED_VER == $LATEST_VER ]]
 			then
-				echo "========= Direwolf is already at latest version $LATEST_VER ==========="
+				echo "========= $APP is already at latest version $LATEST_VER ==========="
 				cd ..
 				rm -rf $(ls -td dire* | head -1)
-				rm dev.zip
 			else
 				echo "========= Installing/upgrading $APP ==========="
-            #mkdir -p $HOME/src
-            #cd $HOME/src
-				#wget -q -O ${DIREWOLF_LATEST_VER##*/} $DIREWOLF_LATEST_VER || { echo >&2 "======= $DIREWOLF_LATEST_VER download failed with $? ========"; exit 1; }
          	sudo apt install -y cmake build-essential libusb-1.0-0-dev libasound2-dev pavucontrol screen gpsd libgps-dev || aptError "sudo apt install -y cmake build-essential libusb-1.0-0-dev libasound2-dev pavucontrol screen gpsd libgps-dev"
             installHamlib 
-				#tar zxvf ${DIREWOLF_LATEST_VER##*/}
-				#cd $(ls -td dire* | head -1)
-            #sed -i 's/#CFLAGS += -DUSE_HAMLIB/CFLAGS += -DUSE_HAMLIB/' Makefile.linux
-            #sed -i 's/#LDFLAGS += -lhamlib/LDFLAGS += -lhamlib/' Makefile.linux
-            if make -j4 && sudo make install
+				mkdir build && cd build
+            if cmake .. && make -j4 && sudo make install
             then
                # Make a default config file if this is a new installation
-               [[ ${1,,} == "install" ]] && make install-conf
-               make install-rpi
+               #[[ ${1,,} == "install" ]] && make install-conf && cp direwolf.conf $HOME/direwolf.conf.sample
+               make install-conf && cp direwolf.conf $HOME/direwolf.conf.sample
                cd $HOME
-               unlink $HOME/Desktop/direwolf.desktop
+               [ -f $HOME/Desktop/direwolf.desktop ] && unlink $HOME/Desktop/direwolf.desktop
                [ -f /usr/local/share/applications/direwolf.desktop ] && sudo mv -f /usr/local/share/applications/direwolf.desktop /usr/local/share/applications/direwolf.desktop.disabled
                echo "========= $APP installation complete ==========="
             else
                echo >&2 "========= $APP installation FAILED ==========="
                cd $HOME
+					rm -rf $(ls -td dire* | head -1)
                exit 1
             fi
-				#cd $HOME/src
-				#rm -rf direwolf*/
-				#rm -f ${DIREWOLF_LATEST_VER##*/}
 				cd $HOME
-				rm -f direwolf/dev.zip
+				rm -rf $(ls -td dire* | head -1)
          fi
          ;;
       wsjtx)
