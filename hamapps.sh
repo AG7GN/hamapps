@@ -16,7 +16,7 @@
 #
 #=========================================================================================
 
-VERSION="1.77.3"
+VERSION="1.77.4"
 
 GITHUB_URL="https://github.com"
 HAMLIB_LATEST_URL="$GITHUB_URL/Hamlib/Hamlib/releases/latest"
@@ -665,6 +665,7 @@ EOF
 				echo "============= 710.sh is up to date ============="
 			else
       		sudo cp kenwood/710.sh /usr/local/bin/
+      		sudo cp -f kenwood/*.py /usr/local/bin/
 	      	echo "============= 710.sh installed =============="
 			fi
       	rm -rf kenwood/
