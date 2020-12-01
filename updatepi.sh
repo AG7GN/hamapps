@@ -3,7 +3,7 @@
 # YAD/shell script to install or update certain ham applications, as well as 
 # update Raspbian OS and apps.
 
-VERSION="1.77.4"
+VERSION="1.77.5"
 
 function Help () {
 	BROWSER="$(command -v chromium-browser)"
@@ -219,6 +219,24 @@ fi
 # Nexus versions of the following are now installed via nexus-utilities
 sudo rm -f /usr/local/bin/hampi-release.sh
 sudo rm -f /usr/local/share/applications/hampi-version.desktop
+
+# Use the raspberrypi.org repository
+DIR_="/etc/apt"
+FILE_="sources.list"
+if (( $(grep -c "^deb.*raspbian.raspberrypi.org" $DIR_/$FILE_) != 2 ))
+then
+	sudo mv -f $DIR_/$FILE_ $DIR_/${FILE_}.previous
+	cat > /tmp/$FILE_ <<EOF
+deb http://raspbian.raspberrypi.org/raspbian/ buster main contrib non-free rpi
+# Uncomment line below then 'apt-get update' to enable 'apt-get source'
+deb-src http://raspbian.raspberrypi.org/raspbian/ buster main contrib non-free rpi
+EOF
+	sudo mv /tmp/$FILE_ $DIR_/$FILE_
+	echo $FILE_ updated
+else
+	echo "No changes to $FILE_"
+fi
+
 
 RESULT=2
 # Initially generate app list with pick boxes for installed apps not checked
