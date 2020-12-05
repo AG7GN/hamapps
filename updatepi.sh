@@ -3,7 +3,7 @@
 # YAD/shell script to install or update certain ham applications, as well as 
 # update Raspbian OS and apps.
 
-VERSION="1.77.5"
+VERSION="1.77.6"
 
 function Help () {
 	BROWSER="$(command -v chromium-browser)"
@@ -83,8 +83,8 @@ function GenerateList () {
 	DESC[wsjtx]="Weak Signal Modes Modem"
 	DESC[xastir]="APRS Tracking and Mapping Utility"
 	
-#	echo -e "${CHECKED[$1]}\n<s>Raspbian OS and Apps</s>\n<s>Update Raspbian OS and Apps</s>\n<s>Check for Updates</s>" > "$TFILE"
-	echo -e "${CHECKED[$1]}\nRaspbian OS and Apps\nUpdate Raspbian OS and Apps\nCheck for Updates" > "$TFILE"
+	echo -e "${CHECKED[$1]}\n<s>Raspbian OS and Apps</s>\n<s>Update Raspbian OS and Apps</s>\n<s>Check for Updates</s>" > "$TFILE"
+#	echo -e "${CHECKED[$1]}\nRaspbian OS and Apps\nUpdate Raspbian OS and Apps\nCheck for Updates" > "$TFILE"
 	for A in $LIST 
 	do 
 		case $A in
@@ -276,6 +276,7 @@ else
       OSUPDATES=YES
 		ANS="$(echo "$ANS" | grep -v Raspbian)"
    fi
+   OSUPDATES=NO
 	#UPDATES="$(echo "$ANS" | grep Updates | cut -d, -f2 | tr '\n' ' ' | sed 's/ $//')"
 	#INSTALLS="$(echo "$ANS" | grep "New Install" | cut -d, -f2 | tr '\n' ' ' | sed 's/ $//')"
 	UPDATES="$(echo "$ANS" | grep Updates | cut -d, -f2 | tr '\n' ',' | sed 's/,$//')"
@@ -300,22 +301,22 @@ else
       [ $? -eq 2 ] && REBOOT="YES"
 	fi
    echo
-   if [[ $OSUPDATES == "YES" ]]
-   then
-#   	yad --center --title="Update Apps/OS - version $VERSION" --info --borders=30 \
-#--no-wrap --text-align=center --text="<b>Raspbian OS Updates are temporarily DISABLED due to a kernel bug that affects the Fe-Pi audio board</b>\n\n" \
-#--buttons-layout=center \
-#--button=Close:0
-#		exit 0
-      echo "Checking for regular Raspberry Pi OS updates..."
-		echo
-      sudo apt update
-      sudo apt -m -y upgrade && echo -e "\n\n=========== Raspbian OS Update Finished ==========="
-      # Make sure pulseaudio is not default sound device.  If pulseaudio is updated,
-      # it might restore this file and make pulseaudio the default sound interface.
-      # So, we make sure every nonempty line is commented out.
-      sudo sed -i -e '/^[^#]/ s/^#*/#/' /usr/share/alsa/pulse-alsa.conf
-	fi
+#   if [[ $OSUPDATES == "YES" ]]
+#   then
+##   	yad --center --title="Update Apps/OS - version $VERSION" --info --borders=30 \
+##--no-wrap --text-align=center --text="<b>Raspbian OS Updates are temporarily DISABLED due to a kernel bug that affects the Fe-Pi audio board</b>\n\n" \
+##--buttons-layout=center \
+##--button=Close:0
+##		exit 0
+#      echo "Checking for regular Raspberry Pi OS updates..."
+#		echo
+#      sudo apt update
+#      sudo apt -m -y upgrade && echo -e "\n\n=========== Raspbian OS Update Finished ==========="
+#      # Make sure pulseaudio is not default sound device.  If pulseaudio is updated,
+#      # it might restore this file and make pulseaudio the default sound interface.
+#      # So, we make sure every nonempty line is commented out.
+#      sudo sed -i -e '/^[^#]/ s/^#*/#/' /usr/share/alsa/pulse-alsa.conf
+#	fi
 fi
 
 if [[ $REBOOT == "YES" ]]
