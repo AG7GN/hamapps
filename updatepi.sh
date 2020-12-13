@@ -3,7 +3,7 @@
 # YAD/shell script to install or update certain ham applications, as well as 
 # update Raspbian OS and apps.
 
-VERSION="1.77.6"
+VERSION="1.77.7"
 
 function Help () {
 	BROWSER="$(command -v chromium-browser)"
@@ -172,6 +172,22 @@ run <b>Raspberry > Hamradio > Update Pi and Ham Apps</b> again." --buttons-layou
 	rm -rf hamapps/
 }
 
+function newVersion () {
+   BROWSER="$(command -v chromium-browser)"
+   $BROWSER https://github.com/AG7GN/images/blob/master/README.md 2>/dev/null &
+}
+export -f newVersion
+
+function deprecated() {
+	yad --center --title="Update Apps/OS - version $VERSION" --info \
+	--buttons-layout=center \
+	--borders=10 --text-align=center \
+	--text="<b><span color='red'>THIS SCRIPT IS DEPRECATED.</span></b>\n
+There will be no further updates to it.\nPlease upgrade to the latest Nexus DR-X image." \
+	--button="<b><span color='blue'>More Information</span></b>":"bash -c newVersion" \
+	--button=Close:0
+}
+
 REBOOT="NO"
 APPS=""
 OSUPDATES=NO
@@ -189,7 +205,8 @@ and run this script again.</b>" --buttons-layout=center \
 fi
 
 # Comment the following line out to prevent self-updating of this script.
-selfUpdate
+#selfUpdate
+deprecated
 
 # Move the direwolf scripts to /usr/local/bin if necessary
 if ls $HOME/dw-*.sh >/dev/null 2>&1
